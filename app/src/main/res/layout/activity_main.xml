@@ -1,18 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/main_screen"
+    android:orientation="vertical"
+    android:padding="16dp"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:visibility="visible"
+        android:paddingBottom="24dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size"
+            />
+    </FrameLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="@dimen/button_weight"
+        android:backgroundTint="@color/white"
+        android:text="@string/search"
+        android:textColor="@color/black_blue"
+        android:inputType="textCapSentences"
+        android:textSize="@dimen/text_size"
+        app:icon="@drawable/ic_search"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/icon_for_text"
+        app:iconTint="@color/black_blue"
+        app:cornerRadius="@dimen/button_radius"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="@dimen/button_weight"
+        android:backgroundTint="@color/white"
+        android:text="@string/media"
+        android:textColor="@color/black_blue"
+        android:inputType="textCapSentences"
+        android:textSize="@dimen/text_size"
+        app:icon="@drawable/ic_media"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/icon_for_text"
+        app:iconTint="@color/black_blue"
+        app:cornerRadius="@dimen/button_radius"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="@dimen/button_weight"
+        android:backgroundTint="@color/white"
+        android:text="@string/settings"
+        android:textColor="@color/black_blue"
+        android:inputType="textCapSentences"
+        android:textSize="@dimen/text_size"
+        app:icon="@drawable/ic_settings"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/icon_for_text"
+        app:iconTint="@color/black_blue"
+        app:cornerRadius="@dimen/button_radius"
+        />
+</LinearLayout>

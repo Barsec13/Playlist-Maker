@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_size">26sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="icon_for_text">10dp</dimen>
+    <dimen name="button_weight">1</dimen>
+    <dimen name="button_radius">16</dimen>
+    <dimen name="padding_4_for_settings">4</dimen>
+    <dimen name="margin_settings">16</dimen>
+    <dimen name="margin_settings_21">21</dimen>
+</resources>
