@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -16,23 +17,19 @@ class MainActivity : AppCompatActivity() {
         val buttonMedia = findViewById<Button>(R.id.buttonMedia)
         val buttonSettings = findViewById<Button>(R.id.buttonSettings)
 
-        //Заглушка на нажатие кнопки "Поиск" методом анонимного класса
-        val buttonSearchClickListener = object : View.OnClickListener {
-            override fun onClick(p0: View?) {
-                Toast.makeText(this@MainActivity, "Бегу искать музыку", Toast.LENGTH_SHORT).show()
-            }
+        buttonSearch.setOnClickListener() {
+            val searchIntent = Intent(this@MainActivity, SearchActivity::class.java)
+            startActivity(searchIntent)
         }
 
-        buttonSearch.setOnClickListener(buttonSearchClickListener)
-
-        //Заглушка на нажатие кнопки "Медиатека" методом лямбда-выражение
         buttonMedia.setOnClickListener() {
-            Toast.makeText(this@MainActivity, "Открываю вашу любимую музыку", Toast.LENGTH_SHORT).show()
+            val mediaIntent = Intent(this@MainActivity, MediaActivity::class.java)
+            startActivity(mediaIntent)
         }
 
-        //Заглушка на нажатие кнопки "Настройки" методом лямбда-выражение
         buttonSettings.setOnClickListener() {
-            Toast.makeText(this@MainActivity, "Сейчас все настроим", Toast.LENGTH_SHORT).show()
+            val settingsIntent = Intent(this@MainActivity, SettingsActivity::class.java)
+            startActivity(settingsIntent)
         }
     }
 }

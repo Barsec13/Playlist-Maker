@@ -16,6 +16,7 @@
         android:padding="@dimen/padding_4_for_settings"
         android:layout_marginBottom="24dp">
         <Button
+            android:id="@+id/buttonArrowBackSettings"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:stateListAnimator="@null"
@@ -46,12 +47,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerInParent="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="21dp"
-            android:layout_marginBottom="21dp"
+            android:layout_marginStart="@dimen/margin_settings"
+            android:layout_marginTop="@dimen/margin_settings_21"
+            android:layout_marginBottom="@dimen/margin_settings_21"
             android:text="@string/dark_Theme"
             android:textColor="@color/black_blue"
-            android:textSize="16sp"/>
+            android:textSize="@dimen/text_size_16"/>
 
         <Switch
             android:layout_width="wrap_content"
