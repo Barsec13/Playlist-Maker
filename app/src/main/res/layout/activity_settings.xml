@@ -12,7 +12,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:visibility="visible"
         android:padding="@dimen/padding_4_for_settings"
         android:layout_marginBottom="24dp">
         <Button
@@ -36,20 +35,17 @@
             />
     </LinearLayout>
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:visibility="visible"
-        android:padding="@dimen/padding_4_for_settings">
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerInParent="true"
+            android:layout_gravity="start|center_horizontal"
             android:layout_marginStart="@dimen/margin_settings"
-            android:layout_marginTop="@dimen/margin_settings_21"
-            android:layout_marginBottom="@dimen/margin_settings_21"
+            android:layout_marginTop="@dimen/margin_settings_20"
+            android:layout_marginBottom="@dimen/margin_settings_20"
             android:text="@string/dark_Theme"
             android:textColor="@color/black_blue"
             android:textSize="@dimen/text_size_16"/>
@@ -57,29 +53,24 @@
         <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true"
-            android:layout_marginEnd="6dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_margin="@dimen/margin_settings_20"
             />
-    </RelativeLayout>
+    </FrameLayout>
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:visibility="visible"
         android:padding="@dimen/padding_4_for_settings"
         tools:ignore="ExtraText">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerInParent="true"
+            android:layout_gravity="start|center_horizontal"
             android:layout_marginStart="@dimen/margin_settings"
-            android:layout_marginTop="@dimen/margin_settings_21"
-            android:layout_marginBottom="@dimen/margin_settings_21"
+            android:layout_marginTop="@dimen/margin_settings_20"
+            android:layout_marginBottom="@dimen/margin_settings_20"
             android:text="@string/share"
             android:textColor="@color/black_blue"
             android:textSize="@dimen/text_size_16"/>
@@ -87,65 +78,61 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
             android:src="@drawable/ic_share"
-            android:layout_margin="@dimen/margin_settings_21"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true" />
-    </RelativeLayout>
+            android:layout_margin="@dimen/margin_settings_20"
+             />
+    </FrameLayout>
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:visibility="visible"
         android:padding="@dimen/padding_4_for_settings"
         tools:ignore="ExtraText">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerInParent="true"
+            android:layout_gravity="start|center_horizontal"
             android:layout_marginStart="@dimen/margin_settings"
-            android:layout_marginTop="@dimen/margin_settings_21"
-            android:layout_marginBottom="@dimen/margin_settings_21"
-            android:text="@string/support"
+            android:layout_marginTop="@dimen/margin_settings_20"
+            android:layout_marginBottom="@dimen/margin_settings_20"
+            android:text="@string/share"
             android:textColor="@color/black_blue"
             android:textSize="@dimen/text_size_16"/>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
             android:src="@drawable/ic_support"
-            android:layout_margin="@dimen/margin_settings_21"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true" />
-    </RelativeLayout>
+            android:layout_margin="@dimen/margin_settings_20"
+            />
+    </FrameLayout>
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:visibility="visible"
         android:padding="@dimen/padding_4_for_settings"
         tools:ignore="ExtraText">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerInParent="true"
+            android:layout_gravity="start|center_horizontal"
             android:layout_marginStart="@dimen/margin_settings"
-            android:layout_marginTop="@dimen/margin_settings_21"
-            android:layout_marginBottom="@dimen/margin_settings_21"
-            android:text="@string/arrow_forward"
+            android:layout_marginTop="@dimen/margin_settings_20"
+            android:layout_marginBottom="@dimen/margin_settings_20"
+            android:text="@string/share"
             android:textColor="@color/black_blue"
             android:textSize="@dimen/text_size_16"/>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
             android:src="@drawable/ic_arrow_forward"
-            android:layout_margin="@dimen/margin_settings_21"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true" />
-    </RelativeLayout>
+            android:layout_margin="@dimen/margin_settings_20"
+            />
+    </FrameLayout>
 </LinearLayout>
