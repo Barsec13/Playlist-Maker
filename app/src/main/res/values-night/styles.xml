@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="ImageViewSettings">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">end|center_vertical</item>
+        <item name="android:layout_margin">@dimen/margin_settings_20</item>
+        <item name="tint">?attr/colorSecondaryVariant</item>
+        <item name="android:trackTint" tools:targetApi="m">@color/light_blue</item>
+        <item name="android:thumbTint">@color/blue</item>
+        <item name="android:checked">true</item>
+    </style>
+</resources>
