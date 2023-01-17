@@ -58,6 +58,7 @@
             style="@style/TextViewSettings"/>
 
         <ImageView
+            android:id="@+id/share"
             android:src="@drawable/ic_share"
             style="@style/ImageViewSettings"/>
     </FrameLayout>
@@ -68,9 +69,10 @@
 
         <TextView
             style="@style/TextViewSettings"
-            android:text="@string/share"/>
+            android:text="@string/support"/>
 
         <ImageView
+            android:id="@+id/support"
             android:src="@drawable/ic_support"
             style="@style/ImageViewSettings"/>
     </FrameLayout>
@@ -81,9 +83,10 @@
 
         <TextView
             style="@style/TextViewSettings"
-            android:text="@string/share"/>
+            android:text="@string/arrow_forward"/>
 
         <ImageView
+            android:id="@+id/user_agreement"
             android:src="@drawable/ic_arrow_forward"
             style="@style/ImageViewSettings"/>
     </FrameLayout>

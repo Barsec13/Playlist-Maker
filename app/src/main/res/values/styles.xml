@@ -20,7 +20,7 @@
     <style name="TextViewSettings">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">start|center_horizontal</item>
+        <item name="android:layout_gravity">start|center_vertical</item>
         <item name="android:layout_marginStart">@dimen/margin_settings</item>
         <item name="android:layout_marginTop">@dimen/margin_settings_20</item>
         <item name="android:layout_marginBottom">@dimen/margin_settings_20</item>
