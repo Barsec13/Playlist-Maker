@@ -10,4 +10,8 @@
     <dimen name="margin_settings">16dp</dimen>
     <dimen name="margin_settings_20">20dp</dimen>
     <dimen name="button_height">0dp</dimen>
+    <dimen name="padding_text">12dp</dimen>
+    <dimen name="size_arrow_back">48dp</dimen>
+    <dimen name="margin_button">24dp</dimen>
+    <dimen name="margin_edit_text">16dp</dimen>
 </resources>

@@ -10,30 +10,13 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/padding_4_for_settings"
-        android:layout_marginBottom="24dp">
+    <LinearLayout style="@style/panel_header">
         <Button
             android:id="@+id/buttonArrowBackSettings"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:stateListAnimator="@null"
-            android:backgroundTint="?attr/colorSecondary"
-            android:textSize="@dimen/text_size"
-            app:icon="@drawable/ic_arrow_back"
-            app:iconTint="?attr/colorOnSecondary"
-            android:layout_gravity="center"/>
+            style="@style/button_arrowBack_panel_header"/>
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/settings"
-            android:textColor="?attr/colorOnSecondary"
-            android:textSize="22sp"
-            android:layout_gravity="center"
-            android:paddingStart="12dp"
-            android:fontFamily="@font/ys_display_medium"/>
+            style="@style/text_panel_header"/>
     </LinearLayout>
 
     <FrameLayout
@@ -45,8 +28,7 @@
             style="@style/TextViewSettings" />
 
         <Switch
-            style="@style/ImageViewSettings"
-            />
+            style="@style/ImageViewSettings"/>
     </FrameLayout>
 
     <FrameLayout
