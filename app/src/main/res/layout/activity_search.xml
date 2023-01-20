@@ -58,7 +58,8 @@
                 android:textColorHint="?attr/text_search"
                 android:fontFamily="@font/ys_text_regular"
                 android:textSize="@dimen/text_size_16"
-                android:background="@null"/>
+                android:background="@null"
+                android:textCursorDrawable="@null"/>
 
             <ImageView
                 android:id="@+id/searchClearIcon"
