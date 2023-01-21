@@ -27,7 +27,7 @@ class SettingsActivity : AppCompatActivity() {
 
         //Реализация кнопки "Поделиться приложением"
         share.setOnClickListener() {
-            val linkToTheCourse = "https://practicum.yandex.ru/android-developer/"
+            val linkToTheCourse = getString(R.string.link_to_the_course)
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.setType("text/plain")
             shareIntent.putExtra(Intent.EXTRA_TEXT, linkToTheCourse)
@@ -39,6 +39,7 @@ class SettingsActivity : AppCompatActivity() {
             val message = getString(R.string.message)
             val subject = getString(R.string.subject)
             val shareIntent = Intent(Intent.ACTION_SENDTO)
+            val emailDeveloper = getString(R.string.email_developer)
             shareIntent.data = Uri.parse("mailto:")
             shareIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("putilov0407@gmail.com"))
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
@@ -48,7 +49,8 @@ class SettingsActivity : AppCompatActivity() {
 
         //Реализация кнопки пользовательское соглашение
         userAgreement.setOnClickListener(){
-            val uriUserAgreement = Uri.parse("https://yandex.ru/legal/practicum_offer/")
+            val linkToTheOffer = getString(R.string.link_to_the_offer)
+            val uriUserAgreement = Uri.parse(linkToTheOffer)
             val intent = Intent(Intent.ACTION_VIEW, uriUserAgreement)
             startActivity(intent)
         }

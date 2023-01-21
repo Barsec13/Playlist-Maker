@@ -12,5 +12,7 @@
 
     <string name="message">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
-
+    <string name="link_to_the_course">https://practicum.yandex.ru/android-developer/</string>
+    <string name="email_developer">putilov0407@gmail.com</string>
+    <string name="link_to_the_offer">https://yandex.ru/legal/practicum_offer/</string>
 </resources>
