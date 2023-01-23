@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 
 class SearchActivity : AppCompatActivity() {
     var textSearch = ""
+    lateinit var searchEditText: EditText
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -26,7 +27,7 @@ class SearchActivity : AppCompatActivity() {
 
         //Ссылки на элементы
         val searchClearIcon = findViewById<ImageView>(R.id.searchClearIcon)
-        val searchEditText = findViewById<EditText>(R.id.searchEditText)
+        searchEditText = findViewById<EditText>(R.id.searchEditText)
         searchEditText.setText(textSearch)
 
         //Объект для работы с клавиатурой
@@ -47,7 +48,7 @@ class SearchActivity : AppCompatActivity() {
             //Действие при вводе текста
             override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 searchClearIcon.visibility = searchClearIconVisibility(s)
-                textSearch = "searchEditText.getText().toString()"
+                textSearch = searchEditText.getText().toString()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -68,10 +69,6 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    companion object {
-        const val TEXT_SEARCH = "TEXT_SEARCH"
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(TEXT_SEARCH,textSearch)
@@ -80,7 +77,11 @@ class SearchActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         textSearch = savedInstanceState.getString(TEXT_SEARCH).toString()
-        findViewById<EditText>(R.id.searchEditText).setText(textSearch)
+        searchEditText.setText(textSearch)
+    }
+
+    companion object {
+        const val TEXT_SEARCH = "TEXT_SEARCH"
     }
 }
 

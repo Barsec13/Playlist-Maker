@@ -4,7 +4,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 
 class SettingsActivity : AppCompatActivity() {
@@ -21,34 +23,36 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         //Ссылки на кнопки
-        val share = findViewById<ImageView>(R.id.share)
-        val support = findViewById<ImageView>(R.id.support)
-        val userAgreement = findViewById<ImageView>(R.id.user_agreement)
+        val buttonShare = findViewById<FrameLayout>(R.id.button_share)
+        val buttonSupport = findViewById<FrameLayout>(R.id.button_support)
+        val buttonUserAgreement = findViewById<FrameLayout>(R.id.button_user_agreement)
 
         //Реализация кнопки "Поделиться приложением"
-        share.setOnClickListener() {
-            val linkToTheCourse = getString(R.string.link_to_the_course)
-            val shareIntent = Intent(Intent.ACTION_SEND)
-            shareIntent.setType("text/plain")
-            shareIntent.putExtra(Intent.EXTRA_TEXT, linkToTheCourse)
-            startActivity(shareIntent)
+        buttonShare.setOnClickListener() {
+            Intent(Intent.ACTION_SEND).apply {
+                val linkToTheCourse = getString(R.string.link_to_the_course)
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, linkToTheCourse)
+                startActivity(this)
+            }
         }
 
         //Реализация кнопки "Поддержка"
-        support.setOnClickListener(){
-            val message = getString(R.string.message)
-            val subject = getString(R.string.subject)
-            val shareIntent = Intent(Intent.ACTION_SENDTO)
-            val emailDeveloper = getString(R.string.email_developer)
-            shareIntent.data = Uri.parse("mailto:")
-            shareIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("putilov0407@gmail.com"))
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
-            shareIntent.putExtra(Intent.EXTRA_TEXT, message)
-            startActivity(shareIntent)
+        buttonSupport.setOnClickListener(){
+            Intent(Intent.ACTION_SEND).apply{
+                val message = getString(R.string.message)
+                val subject = getString(R.string.subject)
+                val emailDeveloper = getString(R.string.email_developer)
+                data = Uri.parse("mailto:")
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(emailDeveloper))
+                putExtra(Intent.EXTRA_SUBJECT, subject)
+                putExtra(Intent.EXTRA_TEXT, message)
+                startActivity(this)
+            }
         }
 
         //Реализация кнопки пользовательское соглашение
-        userAgreement.setOnClickListener(){
+        buttonUserAgreement.setOnClickListener(){
             val linkToTheOffer = getString(R.string.link_to_the_offer)
             val uriUserAgreement = Uri.parse(linkToTheOffer)
             val intent = Intent(Intent.ACTION_VIEW, uriUserAgreement)

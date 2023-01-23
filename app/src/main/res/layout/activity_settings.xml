@@ -20,6 +20,7 @@
     </LinearLayout>
 
     <FrameLayout
+        android:id="@+id/button_dark_theme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -32,6 +33,7 @@
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/button_share"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -46,6 +48,7 @@
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/button_support"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -60,6 +63,7 @@
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/button_user_agreement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
