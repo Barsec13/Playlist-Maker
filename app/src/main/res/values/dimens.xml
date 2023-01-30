@@ -5,8 +5,13 @@
     <dimen name="icon_for_text">12dp</dimen>
     <dimen name="button_weight">1</dimen>
     <dimen name="button_radius">16dp</dimen>
+    <dimen name="margin_main">16dp</dimen>
     <dimen name="padding_4_for_settings">4dp</dimen>
     <dimen name="margin_settings">16dp</dimen>
     <dimen name="margin_settings_20">20dp</dimen>
     <dimen name="button_height">0dp</dimen>
+    <dimen name="padding_text">12dp</dimen>
+    <dimen name="size_arrow_back">48dp</dimen>
+    <dimen name="margin_button">24dp</dimen>
+    <dimen name="margin_edit_text">16dp</dimen>
 </resources>

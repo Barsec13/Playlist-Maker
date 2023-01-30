@@ -8,14 +8,19 @@ import android.widget.Button
 import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
+    //Переменные для работы с UI
+    lateinit var buttonSearch:Button
+    lateinit var buttonMedia:Button
+    lateinit var buttonSettings:Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         //Ссылки на кнопки на главном экране
-        val buttonSearch = findViewById<Button>(R.id.buttonSearch)
-        val buttonMedia = findViewById<Button>(R.id.buttonMedia)
-        val buttonSettings = findViewById<Button>(R.id.buttonSettings)
+        buttonSearch = findViewById(R.id.buttonSearch)
+        buttonMedia = findViewById(R.id.buttonMedia)
+        buttonSettings = findViewById(R.id.buttonSettings)
 
         buttonSearch.setOnClickListener() {
             val searchIntent = Intent(this@MainActivity, SearchActivity::class.java)
