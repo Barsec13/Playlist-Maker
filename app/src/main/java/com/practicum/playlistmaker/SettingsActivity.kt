@@ -3,29 +3,30 @@ package com.practicum.playlistmaker
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 
 class SettingsActivity : AppCompatActivity() {
+    //Переменные для работы с UI
+    lateinit var buttonShare: FrameLayout
+    lateinit var buttonSupport: FrameLayout
+    lateinit var buttonUserAgreement: FrameLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        //Кнопка "<-" из окна "Настройки"
-        val buttonArrowBackSettings = findViewById<Button>(R.id.buttonArrowBackSettings)
-        //Обработка нажатия на кнопку "<-" и переход
+        val buttonArrowBackSettings = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbarSetting)
+        //Обработка нажатия на ToolBar "<-" и переход
         // на главный экран через закрытие экрана "Настройки"
         buttonArrowBackSettings.setOnClickListener(){
             finish()
         }
 
         //Ссылки на кнопки
-        val buttonShare = findViewById<FrameLayout>(R.id.button_share)
-        val buttonSupport = findViewById<FrameLayout>(R.id.button_support)
-        val buttonUserAgreement = findViewById<FrameLayout>(R.id.button_user_agreement)
+        buttonShare = findViewById(R.id.button_share)
+        buttonSupport = findViewById(R.id.button_support)
+        buttonUserAgreement = findViewById(R.id.button_user_agreement)
 
         //Реализация кнопки "Поделиться приложением"
         buttonShare.setOnClickListener() {

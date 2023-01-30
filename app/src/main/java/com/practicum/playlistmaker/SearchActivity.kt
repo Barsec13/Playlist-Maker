@@ -12,22 +12,26 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 
 class SearchActivity : AppCompatActivity() {
+    //Переменная для работы с вводимым запросом
     var textSearch = ""
+    //Переменные для работы с UI
     lateinit var searchEditText: EditText
+    lateinit var searchClearIcon: ImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
         //Кнопка "<-" из окна "Настройки"
-        val buttonArrowBackSettings = findViewById<Button>(R.id.buttonArrowBackSettings)
-        //Обработка нажатия на кнопку "<-" и переход
+        val buttonArrowBackSettings = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbarSetting)
+        //Обработка нажатия на ToolBar "<-" и переход
         // на главный экран через закрытие экрана "Настройки"
         buttonArrowBackSettings.setOnClickListener(){
             finish()
         }
 
         //Ссылки на элементы
-        val searchClearIcon = findViewById<ImageView>(R.id.searchClearIcon)
-        searchEditText = findViewById<EditText>(R.id.searchEditText)
+        searchClearIcon = findViewById(R.id.searchClearIcon)
+        searchEditText = findViewById(R.id.searchEditText)
         searchEditText.setText(textSearch)
 
         //Объект для работы с клавиатурой

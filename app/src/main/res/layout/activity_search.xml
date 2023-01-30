@@ -10,14 +10,10 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <LinearLayout style="@style/panel_header">
-        <Button
-            android:id="@+id/buttonArrowBackSettings"
-            style="@style/button_arrowBack_panel_header"/>
-        <TextView
-            android:text="@string/search"
-            style="@style/text_panel_header"/>
-    </LinearLayout>
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarSetting"
+        app:title="@string/search"
+        style="@style/panel_header_toolbar"/>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"

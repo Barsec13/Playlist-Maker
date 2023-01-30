@@ -50,21 +50,16 @@
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
 
-    <style name="button_arrowBack_panel_header">
-        <item name="android:layout_width">@dimen/size_arrow_back</item>
-        <item name="android:layout_height">@dimen/size_arrow_back</item>
-        <item name="android:stateListAnimator">@null</item>
-        <item name="android:backgroundTint">?attr/colorSecondary</item>
-        <item name="android:textSize">@dimen/text_size</item>
-        <item name="icon">@drawable/ic_arrow_back</item>
-        <item name="iconTint">?attr/colorOnSecondary</item>
-        <item name="android:layout_gravity">center</item>
-    </style>
-
-    <style name="panel_header">
+    <style name="panel_header_toolbar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">@dimen/padding_4_for_settings</item>
         <item name="android:layout_marginBottom">@dimen/margin_button</item>
+        <item name="android:background">?attr/colorSecondary</item>
+        <item name="titleTextAppearance">@style/text_panel_header</item>
+        <item name="navigationIcon">@drawable/ic_arrow_back</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+        <item name="titleMarginStart">0dp</item>
     </style>
 </resources>
