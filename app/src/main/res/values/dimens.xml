@@ -14,4 +14,9 @@
     <dimen name="size_arrow_back">48dp</dimen>
     <dimen name="margin_button">24dp</dimen>
     <dimen name="margin_edit_text">16dp</dimen>
+    <dimen name="roundingRadius">2dp</dimen>
+    <dimen name="sideImageTrack">45dp</dimen>
+    <dimen name="marginImageTrack">8dp</dimen>
+    <dimen name="marginTextTrack">1dp</dimen>
+    <dimen name="marginEllipseTrack">5dp</dimen>
 </resources>

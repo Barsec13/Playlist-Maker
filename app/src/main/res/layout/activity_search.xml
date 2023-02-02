@@ -20,7 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_edit_text"
         android:layout_marginEnd="@dimen/margin_edit_text"
-        app:cardCornerRadius="8dp">
+        app:cardCornerRadius="8dp"
+        android:layout_marginBottom="24dp">
 
         <LinearLayout
             android:id="@+id/container"
@@ -66,8 +67,13 @@
                 android:src="@android:drawable/ic_menu_close_clear_cancel"
                 android:visibility="visible"
                 app:tint="?attr/icon_search"
-                android:layout_margin="@dimen/padding_text"
-                />
+                android:layout_margin="@dimen/padding_text"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 </LinearLayout>
