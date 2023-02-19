@@ -18,6 +18,7 @@ class SearchActivity : AppCompatActivity() {
     //Переменные для работы с UI
     lateinit var searchEditText: EditText
     lateinit var searchClearIcon: ImageView
+    lateinit var buttonArrowBackSettings: androidx.appcompat.widget.Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,33 +41,54 @@ class SearchActivity : AppCompatActivity() {
         )
 
         //RecyclerView
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        val newsAdapter = TrackAdapter(tracks)
-        recyclerView.adapter = newsAdapter
+        setAdapter(tracks)
+
+        //Присвоить значение переменным
+        initViews()
+
+        //Listener
+        setListeners()
+
+        //Работа с вводимым текстом
+        inputText()
+    }
+
+    //Присвоить значение переменным
+    private fun initViews(){
+        searchClearIcon = findViewById(R.id.searchClearIcon)
+        searchEditText = findViewById(R.id.searchEditText)
+        searchEditText.setText(textSearch)
 
         //Кнопка "<-" из окна "Настройки"
-        val buttonArrowBackSettings = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbarSetting)
+        buttonArrowBackSettings = findViewById(R.id.toolbarSetting)
+    }
 
+    //Настроить Listeners
+    private fun setListeners(){
         //Обработка нажатия на ToolBar "<-" и переход
         // на главный экран через закрытие экрана "Настройки"
         buttonArrowBackSettings.setOnClickListener(){
             finish()
         }
 
-        //Ссылки на элементы
-        searchClearIcon = findViewById(R.id.searchClearIcon)
-        searchEditText = findViewById(R.id.searchEditText)
-        searchEditText.setText(textSearch)
-
+        //Очистить поле для ввода и скрыть клавиатуру
         //Объект для работы с клавиатурой
         val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
 
-        //Очистить поле для ввода и скрыть клавиатуру
         searchClearIcon.setOnClickListener {
             searchEditText.setText("")
             inputMethodManager?.hideSoftInputFromWindow(searchEditText.windowToken, 0)
         }
+    }
 
+    //Настроить RecyclerView
+    private fun setAdapter(tracks : ArrayList<Track>){
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        val newsAdapter = TrackAdapter(tracks)
+        recyclerView.adapter = newsAdapter
+    }
+
+    private fun inputText(){
         //Работа с вводимым текстом
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -83,7 +105,6 @@ class SearchActivity : AppCompatActivity() {
                 // empty
             }
         }
-
         //Связть поля для ввода и TextWatcher
         searchEditText.addTextChangedListener(simpleTextWatcher)
     }
@@ -97,11 +118,13 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    //Cохранить уже имеющееся состояние Activity
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(TEXT_SEARCH,textSearch)
     }
 
+    //Получить сохранённое значение Activity из onSaveInstanceState
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         textSearch = savedInstanceState.getString(TEXT_SEARCH).toString()
