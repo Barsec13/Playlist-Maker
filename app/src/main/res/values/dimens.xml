@@ -19,4 +19,9 @@
     <dimen name="marginImageTrack">8dp</dimen>
     <dimen name="marginTextTrack">1dp</dimen>
     <dimen name="marginEllipseTrack">5dp</dimen>
+    <dimen name="text_size_14">14sp</dimen>
+    <dimen name="text_size_20">20sp</dimen>
+    <dimen name="margin_text_search_24">24dp</dimen>
+    <dimen name="margin_text_search_12">12dp</dimen>
+    <dimen name="search_margin_image">16dp</dimen>
 </resources>
