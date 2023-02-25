@@ -69,5 +69,40 @@
         <item name="android:textColor">?attr/colorSecondaryVariant</item>
         <item name="android:textSize">11sp</item>
         <item name="android:fontFamily">@font/ys_text_regular</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="search_button_refresh">
+        <item name="cornerRadius">54dp</item>
+    </style>
+
+    <style name="search_textview">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/margin_text_search_24</item>
+        <item name="android:layout_marginEnd">@dimen/margin_text_search_24</item>
+        <item name="android:layout_marginBottom">@dimen/margin_text_search_24</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:textSize">@dimen/text_size_20</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="search_image">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical|center</item>
+        <item name="android:layout_marginBottom">@dimen/search_margin_image</item>
+    </style>
+
+    <style name="search_plaseholder">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">86dp</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:visibility">invisible</item>
     </style>
 </resources>
