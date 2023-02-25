@@ -48,10 +48,10 @@
                 android:layout_margin="@dimen/marginEllipseTrack"/>
 
             <TextView
+                android:layout_weight="0"
                 android:id="@+id/trackTime"
                 style="@style/text_track_view"
                 tools:text="5:01"/>
-
             </LinearLayout>
         </LinearLayout>
 
