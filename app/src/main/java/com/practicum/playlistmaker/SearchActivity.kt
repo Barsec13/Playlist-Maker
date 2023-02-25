@@ -170,28 +170,45 @@ class SearchActivity : AppCompatActivity() {
     private fun searchTrack(){
         serviceiTunesSearch.searchTrack(searchEditText.text.toString())
             .enqueue(object : Callback<TrackResponse>{
+
                 override fun onResponse(
                     call: Call<TrackResponse>,
-                    response: Response<TrackResponse>,
-                ) {
-                    if (textSearch.isNotEmpty() && !response.body()?.results.isNullOrEmpty() && response.code() == 200){
+                    response: Response<TrackResponse>) {
+
+                    if (response.code() == 200) {
+                        if (!response.body()?.results.isNullOrEmpty()){
                             tracks.clear()
                             tracks.addAll(response.body()?.results!!)
                             newsAdapter.notifyDataSetChanged()
-                            placeholderNothingWasFound.isVisible = false
-                            placeholderCommunicationsProblem.isVisible = false
-                    }
-                    else{
-                        placeholderNothingWasFound.isVisible = true
-                        placeholderCommunicationsProblem.isVisible = false
-                    }
+                            showMessageError(NetworkError.SuccessRequest())
+                        }
+                        else showMessageError(NetworkError.NoData())
+                    } else showMessageError(NetworkError.ServerError())
                 }
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    placeholderCommunicationsProblem.isVisible = true
-                    placeholderNothingWasFound.isVisible = false
+                    showMessageError(NetworkError.NoInternet())
                 }
             })
+    }
+
+    //Обработка результатов запроса
+    fun showMessageError(networkError: NetworkError){
+        when (networkError){
+            is NetworkError.SuccessRequest ->{
+                placeholderNothingWasFound.isVisible = false
+                placeholderCommunicationsProblem.isVisible = false
+            }
+            is NetworkError.NoData ->{
+                placeholderNothingWasFound.isVisible = true
+                placeholderCommunicationsProblem.isVisible = false
+            }
+
+            is NetworkError.NoInternet -> {
+                placeholderCommunicationsProblem.isVisible = true
+                placeholderNothingWasFound.isVisible = false
+            }
+        }
     }
 }
 

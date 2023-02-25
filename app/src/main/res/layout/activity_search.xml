@@ -67,7 +67,7 @@
                 android:layout_weight="1"
                 android:layout_gravity="center_vertical"
                 android:src="@android:drawable/ic_menu_close_clear_cancel"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:tint="?attr/icon_search"
                 android:layout_margin="@dimen/padding_text"/>
         </LinearLayout>
@@ -125,7 +125,6 @@
                 android:textSize="@dimen/text_size_14"
                 android:fontFamily="@font/ys_display_medium"
                 android:inputType="textCapSentences"/>
-
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>
