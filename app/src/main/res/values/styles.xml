@@ -105,4 +105,9 @@
         <item name="android:orientation">vertical</item>
         <item name="android:visibility">invisible</item>
     </style>
+
+    <style name="settings_switch_material">
+        <item name="android:trackTint" tools:targetApi="m">@color/light_gray</item>
+        <item name="android:thumbTint">@color/gray</item>
+    </style>
 </resources>
