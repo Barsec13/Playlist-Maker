@@ -1,10 +1,9 @@
 package com.practicum.playlistmaker
-
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class TrackAdapter(
-    private val tracks: List<Track>
+class TrackHistoryAdapter(
+    var tracksHistory: ArrayList<Track>
 ) : RecyclerView.Adapter<TrackViewHolder> (){
 
     var itemClickListener: ((Int, Track) -> Unit)? = null
@@ -14,7 +13,7 @@ class TrackAdapter(
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        val track = tracks[position]
+        val track = tracksHistory[position]
         holder.bind(track)
         holder.itemView.setOnClickListener(){
             itemClickListener?.invoke(position, track)
@@ -22,7 +21,7 @@ class TrackAdapter(
     }
 
     override fun getItemCount(): Int {
-        return tracks.size
+        return tracksHistory.size
     }
 
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    android:id="@+id/trackView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -59,4 +60,4 @@
         style="@style/ImageViewSettings"
         android:layout_marginEnd="24dp"
         android:src="@drawable/ic_arrow_forward"/>
-    </LinearLayout>
+</LinearLayout>

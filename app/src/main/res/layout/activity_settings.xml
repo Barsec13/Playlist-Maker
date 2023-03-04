@@ -20,12 +20,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            style="@style/settings_switch_material"
+            android:id="@+id/themeSwitcher"
             android:text="@string/dark_Theme"
-            style="@style/TextViewSettings" />
-
-        <Switch
-            style="@style/ImageViewSettings"/>
+            android:layout_marginHorizontal="16dp"
+            android:layout_gravity="start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_16"
+            android:fontFamily="@font/ys_text_regular"
+            android:textColor="?attr/colorOnSecondary"/>
     </FrameLayout>
 
     <FrameLayout
