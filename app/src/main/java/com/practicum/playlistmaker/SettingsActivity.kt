@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
     //Переменные для работы с UI
@@ -58,6 +59,17 @@ class SettingsActivity : AppCompatActivity() {
             val uriUserAgreement = Uri.parse(linkToTheOffer)
             val intent = Intent(Intent.ACTION_VIEW, uriUserAgreement)
             startActivity(intent)
+        }
+
+        //Реализация переключателя темы
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+
+        themeSwitcher.isChecked = getSharedPreferences(PLAY_LIST_MAKER_SHARED_PREFERENCES, MODE_PRIVATE)
+            .getBoolean(DARK_THEME_KEY, false)
+
+        themeSwitcher.setOnCheckedChangeListener {switcher, checked ->
+           (applicationContext as App).switchTheme(checked)
+            (applicationContext as App).saveTheme(checked)
         }
     }
 }
