@@ -1,7 +1,6 @@
 package com.practicum.playlistmaker
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -19,7 +18,7 @@ class TrackViewHolder(parentView: ViewGroup): RecyclerView.ViewHolder(
     private val trackName: TextView = itemView.findViewById(R.id.trackName)
     private val artistName: TextView = itemView.findViewById(R.id.artistName)
     private val trackTime: TextView = itemView.findViewById(R.id.trackTime)
-    private val artworkUrl100: ImageView = itemView.findViewById(R.id.artwork)
+    private val artworkUrl100: ImageView = itemView.findViewById(R.id.artwork_url_100)
 
     fun bind(model: Track){
         val roundingRadius = itemView.resources.getDimensionPixelSize(R.dimen.roundingRadius)

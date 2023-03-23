@@ -15,5 +15,6 @@
         <item name="icon_search">@color/black</item>
         <item name="text_search">@color/black</item>
         <item name="edit_text">@color/white</item>
+        <item name="button_media">@color/dark_gray</item>
     </style>
 </resources>

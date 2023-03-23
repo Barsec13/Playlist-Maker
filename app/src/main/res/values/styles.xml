@@ -110,4 +110,29 @@
         <item name="android:trackTint" tools:targetApi="m">@color/light_gray</item>
         <item name="android:thumbTint">@color/gray</item>
     </style>
+
+    <style name="data_name_track">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/margin_media</item>
+        <item name="android:layout_marginTop">@dimen/margin_media</item>
+        <item name="android:layout_marginEnd">@dimen/margin_media</item>
+        <item name="android:layout_marginBottom">@dimen/margin_media</item>
+        <item name="android:fontFamily">@font/ys_text_regular</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="layout_constraintStart_toStartOf">@id/left_guideline</item>
+    </style>
+
+    <style name="data_track">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/ys_text_regular</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:layout_marginStart">@dimen/margin_media</item>
+        <item name="android:layout_marginTop">@dimen/margin_media</item>
+        <item name="android:layout_marginEnd">@dimen/margin_media</item>
+        <item name="android:layout_marginBottom">@dimen/margin_media</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+    </style>
 </resources>

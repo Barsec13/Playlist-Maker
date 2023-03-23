@@ -15,6 +15,7 @@
     <dimen name="margin_button">24dp</dimen>
     <dimen name="margin_edit_text">16dp</dimen>
     <dimen name="roundingRadius">2dp</dimen>
+    <dimen name="roundingRadiusPlayer">8dp</dimen>
     <dimen name="sideImageTrack">45dp</dimen>
     <dimen name="marginImageTrack">8dp</dimen>
     <dimen name="marginTextTrack">1dp</dimen>
@@ -24,4 +25,11 @@
     <dimen name="margin_text_search_24">24dp</dimen>
     <dimen name="margin_text_search_12">12dp</dimen>
     <dimen name="search_margin_image">16dp</dimen>
+    <dimen name="margin_media">8dp</dimen>
+    <dimen name="margin_top_media">16dp</dimen>
+    <dimen name="size_button">52dp</dimen>
+    <dimen name="text_size_22">22sp</dimen>
+    <dimen name="margin_bottom_54">54dp</dimen>
+    <dimen name="margin_bottom_24">24dp</dimen>
+    <dimen name="margin_bottom_12">12dp</dimen>
 </resources>

@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -19,6 +20,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 const val HISTORY_TRACKS_SHARED_PREF = "history_tracks_shared_pref"
+const val DATA_TRACK = "data_track"
 
 class SearchActivity : AppCompatActivity() {
     //Переменная для работы с вводимым запросом
@@ -34,8 +36,8 @@ class SearchActivity : AppCompatActivity() {
     lateinit var buttonReturn: Button
     lateinit var historyList: LinearLayout
     lateinit var buttonClear: Button
-    //lateinit var trackView: LinearLayout
     lateinit var sharedPref: SharedPreferences
+    lateinit var sharePrefDataTrack: SharedPreferences
     lateinit var searchHistory: SearchHistory
 
 
@@ -89,6 +91,7 @@ class SearchActivity : AppCompatActivity() {
 
         //Shared Preferences
         sharedPref = getSharedPreferences(HISTORY_TRACKS_SHARED_PREF, MODE_PRIVATE)
+        sharePrefDataTrack = getSharedPreferences(DATA_TRACK, MODE_PRIVATE)
 
         //Объект класса для работы с историей поиске
         searchHistory = SearchHistory(sharedPref)
@@ -157,9 +160,26 @@ class SearchActivity : AppCompatActivity() {
 
         //Обработать нажатие на View трека в поиске
         tracksAdapter.itemClickListener = { position, track ->
+            //Добавить трек в историю
             searchHistory.addTrack(track, position)
             historyTracks = searchHistory.tracksHistoryFromJson() as ArrayList<Track>
             historyTracks.addAll(historyTracks)
+            //Открыть плеер с данными трека
+            sharePrefDataTrack.edit().putString(DATA_TRACK, Gson().toJson(track)).apply()
+            val searchIntent = Intent(this@SearchActivity, MediaActivity::class.java)
+            startActivity(searchIntent)
+        }
+
+        tracksHistoryAdapter.itemClickListener = { position, track ->
+            searchHistory.addTrack(track, position)
+            historyTracks = searchHistory.tracksHistoryFromJson() as ArrayList<Track>
+            //historyTracks.addAll(historyTracks)
+            tracksHistoryAdapter.tracksHistory.clear()
+            tracksHistoryAdapter.tracksHistory = historyTracks
+            tracksHistoryAdapter.notifyDataSetChanged()
+            sharePrefDataTrack.edit().putString(DATA_TRACK, Gson().toJson(track)).apply()
+            val searchIntent = Intent(this@SearchActivity, MediaActivity::class.java)
+            startActivity(searchIntent)
         }
     }
 

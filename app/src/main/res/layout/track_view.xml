@@ -10,7 +10,7 @@
     android:theme="@style/Theme.PlaylistMaker">
 
     <ImageView
-        android:id="@+id/artwork"
+        android:id="@+id/artwork_url_100"
         android:layout_width="@dimen/sideImageTrack"
         android:layout_height="@dimen/sideImageTrack"
         android:src="@drawable/ic_placeholder"
