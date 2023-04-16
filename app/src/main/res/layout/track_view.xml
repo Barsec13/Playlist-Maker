@@ -26,7 +26,7 @@
 
         <TextView
             android:id="@+id/trackName"
-            style="@style/text_track_view"
+            style="@style/textTrackView"
             android:textColor="?attr/colorOnSecondary"
             android:textSize="@dimen/text_size_16"
             tools:text="Song title"/>
@@ -39,7 +39,7 @@
 
             <TextView
                 android:id="@+id/artistName"
-                style="@style/text_track_view"
+                style="@style/textTrackView"
                 tools:text="The artist of the song"/>
 
             <ImageView
@@ -51,7 +51,7 @@
             <TextView
                 android:layout_weight="0"
                 android:id="@+id/trackTime"
-                style="@style/text_track_view"
+                style="@style/textTrackView"
                 tools:text="5:01"/>
             </LinearLayout>
         </LinearLayout>

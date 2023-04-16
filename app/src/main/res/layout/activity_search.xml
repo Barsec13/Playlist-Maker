@@ -13,7 +13,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarSetting"
         app:title="@string/search"
-        style="@style/panel_header_toolbar"/>
+        style="@style/panelHeaderToolbar"/>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -83,39 +83,46 @@
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
+        <ProgressBar android:id="@+id/progressBar"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="148dp"
+            android:layout_gravity="center_horizontal"
+            android:indeterminateTint="@color/blue"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/placeholderNothingWasFound"
-            style="@style/search_plaseholder">
+            style="@style/searchPlaceholder">
 
             <ImageView
-                style="@style/search_image"
+                style="@style/searchImage"
                 android:src="@drawable/ic_nothingfound"/>
 
             <TextView
-                style="@style/search_textview"
+                style="@style/searchTextview"
                 android:text="@string/nothing_found"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/placeholderCommunicationsProblem"
-            style="@style/search_plaseholder">
+            style="@style/searchPlaceholder">
 
             <ImageView
                 android:src="@drawable/ic_communicationproblems"
-                style="@style/search_image"/>
+                style="@style/searchImage"/>
 
             <TextView
-                style="@style/search_textview"
+                style="@style/searchTextview"
                 android:text="@string/communications_problem1"/>
 
             <TextView
-                style="@style/search_textview"
+                style="@style/searchTextview"
                 android:text="@string/communications_problem2"/>
 
             <Button
                 android:id="@+id/button_return"
-                style="@style/search_button_refresh"
+                style="@style/searchButtonRefresh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -154,7 +161,7 @@
 
             <Button
                 android:id="@+id/button_clear_history"
-                style="@style/search_button_refresh"
+                style="@style/searchButtonRefresh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

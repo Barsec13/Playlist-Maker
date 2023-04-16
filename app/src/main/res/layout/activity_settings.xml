@@ -13,7 +13,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarSetting"
         app:title="@string/settings"
-        style="@style/panel_header_toolbar"/>
+        style="@style/panelHeaderToolbar"/>
 
     <FrameLayout
         android:id="@+id/button_dark_theme"
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.switchmaterial.SwitchMaterial
-            style="@style/settings_switch_material"
+            style="@style/settingsSwitchMaterial"
             android:id="@+id/themeSwitcher"
             android:text="@string/dark_Theme"
             android:layout_marginHorizontal="16dp"
