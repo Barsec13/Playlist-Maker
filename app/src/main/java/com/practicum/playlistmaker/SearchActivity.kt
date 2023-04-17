@@ -40,9 +40,8 @@ class SearchActivity : AppCompatActivity() {
     lateinit var buttonClear: Button
     lateinit var sharedPref: SharedPreferences
     lateinit var searchHistory: SearchHistory
-    lateinit var handler: Handler
-    lateinit var thread: Thread
     lateinit var progressBar: ProgressBar
+    private val handler: Handler = Handler(Looper.getMainLooper())
 
 
     //Базовый URL iTunes Search API
@@ -128,9 +127,6 @@ class SearchActivity : AppCompatActivity() {
 
         //Кнопка "<-" из окна "Настройки"
         buttonArrowBackSettings = findViewById(R.id.toolbarSetting)
-
-        //Handler
-        handler = Handler(Looper.getMainLooper())
     }
 
     //Настроить Listeners
@@ -145,7 +141,7 @@ class SearchActivity : AppCompatActivity() {
         buttonClear.setOnClickListener(){
             searchHistory.clearHistory()
             historyTracks = searchHistory.tracksHistoryFromJson() as ArrayList<Track>
-            tracksHistoryAdapter.tracksHistory.clear()
+            tracksHistoryAdapter.setTracks(null)
             tracksHistoryAdapter.notifyDataSetChanged()
             historyList.visibility = View.GONE
         }
@@ -166,8 +162,11 @@ class SearchActivity : AppCompatActivity() {
             //Показать историю поисков
             historyList.visibility = View.VISIBLE
             historyTracks = searchHistory.tracksHistoryFromJson() as ArrayList<Track>
-            tracksHistoryAdapter.tracksHistory = historyTracks
+            tracksHistoryAdapter.setTracks(historyTracks)
             tracksHistoryAdapter.notifyDataSetChanged()
+
+            //Скрыть progressBar
+            progressBar.visibility = View.GONE
         }
 
         //Поиск трека
@@ -210,6 +209,10 @@ class SearchActivity : AppCompatActivity() {
 
     //Отображение истории поиска
     private fun visibleHistoryTrack(){
+        //Скрыть сообщения об ошибках
+        placeholderNothingWasFound.isVisible = false
+        placeholderCommunicationsProblem.isVisible = false
+
         if (historyTracks.isNotEmpty()) historyList.visibility = View.VISIBLE
         else historyList.visibility = View.GONE
     }
@@ -265,6 +268,11 @@ class SearchActivity : AppCompatActivity() {
     //Поиск трека черезе Retrofit
     private fun searchTrack(){
         progressBar.visibility = View.VISIBLE
+
+        //Скрыть сообщения об ошибках
+        placeholderNothingWasFound.isVisible = false
+        placeholderCommunicationsProblem.isVisible = false
+
         serviceiTunesSearch.searchTrack(searchEditText.text.toString())
             .enqueue(object : Callback<TrackResponse>{
                 override fun onResponse(
@@ -321,9 +329,12 @@ class SearchActivity : AppCompatActivity() {
     private fun openMedia(track: Track,position: Int) {
         if (clickDebounce()) {
             searchHistory.addTrack(track, position)
+
             historyTracks = searchHistory.tracksHistoryFromJson() as ArrayList<Track>
-            tracksHistoryAdapter.tracksHistory.clear()
-            tracksHistoryAdapter.tracksHistory = historyTracks
+
+            tracksHistoryAdapter.setTracks(null)
+            tracksHistoryAdapter.setTracks(historyTracks)
+
             tracksHistoryAdapter.notifyDataSetChanged()
             sendToMedia(track)
         }

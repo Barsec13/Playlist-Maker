@@ -35,7 +35,8 @@ class MediaActivity : AppCompatActivity() {
     lateinit var sharePrefDataTrack: SharedPreferences
     lateinit var previewUrl: String
     lateinit var buttonPlay:FloatingActionButton
-    lateinit var handler: Handler
+
+    var handler = Handler(Looper.getMainLooper())
 
     //Состояние медиаплеера
     companion object {
@@ -95,7 +96,6 @@ class MediaActivity : AppCompatActivity() {
     private fun initViews() {
         //Кнопка "<-" из окна "Настройки"
         buttonArrowBackSettings = findViewById(R.id.toolbarSetting)
-        sharedPrefDataTrack = getSharedPreferences(DATA_TRACK, MODE_PRIVATE)
         artworkUrl100 = findViewById(R.id.artwork_url_100)
         trackName = findViewById(R.id.trackName)
         artistName = findViewById(R.id.artistName)
@@ -105,17 +105,14 @@ class MediaActivity : AppCompatActivity() {
         primaryGenreName = findViewById(R.id.primary_genre_name_data)
         country = findViewById(R.id.country_data)
         duration = findViewById(R.id.duration)
-        sharePrefDataTrack = getSharedPreferences(DATA_TRACK, MODE_PRIVATE)
+        sharedPrefDataTrack = getSharedPreferences(DATA_TRACK, MODE_PRIVATE)
         buttonPlay = findViewById(R.id.play_track)
-        handler = Handler(Looper.getMainLooper())
     }
 
 
     //Отображение данных трека
     private fun showDataTrack(){
-
         track = Gson().fromJson(intent.getStringExtra(SEND_TRACK), Track::class.java) ?: return
-        sharePrefDataTrack.edit().putString(DATA_TRACK, Gson().toJson(track)).apply()
 
         // Ссылка на пробный кусок песни
         previewUrl = track.previewUrl
@@ -184,12 +181,12 @@ class MediaActivity : AppCompatActivity() {
         return object : Runnable{
             override fun run() {
                 duration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
-                handler?.postDelayed(this, 300)
+                handler.postDelayed(this, 300)
             }
         }
     }
 
     private fun startTimer(){
-        handler?.post(timerTrack())
+        handler.post(timerTrack())
     }
 }

@@ -84,8 +84,8 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
         <ProgressBar android:id="@+id/progressBar"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="@dimen/sizeProgressBar"
+            android:layout_height="@dimen/sizeProgressBar"
             android:layout_marginTop="148dp"
             android:layout_gravity="center_horizontal"
             android:indeterminateTint="@color/blue"

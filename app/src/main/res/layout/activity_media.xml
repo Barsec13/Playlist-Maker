@@ -109,16 +109,6 @@
         android:src="@drawable/ic_baseline_play_arrow_24"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/pause_track"
-        style="@style/buttonPlayPause"
-        app:layout_constraintStart_toStartOf="@id/play_track"
-        app:layout_constraintEnd_toEndOf="@id/play_track"
-        app:layout_constraintTop_toTopOf="@id/play_track"
-        app:layout_constraintBottom_toBottomOf="@id/play_track"
-        android:src="@drawable/ic_baseline_pause_24"
-        android:visibility="gone"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/like_track"
         android:layout_width="@dimen/size_button"
         android:layout_height="@dimen/size_button"
