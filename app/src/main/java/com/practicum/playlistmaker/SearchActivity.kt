@@ -22,7 +22,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 const val HISTORY_TRACKS_SHARED_PREF = "history_tracks_shared_pref"
-const val DATA_TRACK = "dataTrack"
 
 class SearchActivity : AppCompatActivity() {
     //Переменная для работы с вводимым запросом
@@ -142,7 +141,6 @@ class SearchActivity : AppCompatActivity() {
             searchHistory.clearHistory()
             historyTracks = searchHistory.tracksHistoryFromJson() as ArrayList<Track>
             tracksHistoryAdapter.setTracks(null)
-            tracksHistoryAdapter.notifyDataSetChanged()
             historyList.visibility = View.GONE
         }
 
@@ -151,27 +149,26 @@ class SearchActivity : AppCompatActivity() {
             //Очистить поле для ввода
             searchEditText.setText("")
 
+            historyList.visibility = View.GONE
+
             //Убрать информацию о неудачных запросах
             placeholderNothingWasFound.isVisible  = false
             placeholderCommunicationsProblem.isVisible = false
 
             //Очистить найденный список треков
-            tracks.clear()
-            tracksAdapter.notifyDataSetChanged()
+            tracksAdapter.setTracks(null)
 
             //Показать историю поисков
-            historyList.visibility = View.VISIBLE
             historyTracks = searchHistory.tracksHistoryFromJson() as ArrayList<Track>
             tracksHistoryAdapter.setTracks(historyTracks)
-            tracksHistoryAdapter.notifyDataSetChanged()
-
+            if (historyTracks.isNotEmpty()) historyList.visibility = View.VISIBLE
             //Скрыть progressBar
             progressBar.visibility = View.GONE
         }
 
         //Поиск трека
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
+            if (actionId == EditorInfo.IME_ACTION_DONE && !textSearch.equals("")) {
                 searchTrack()
                 true
             }
@@ -180,7 +177,6 @@ class SearchActivity : AppCompatActivity() {
 
         //Повторить предыдущий запрос после нажатия на кнопку "Обновить"
         buttonReturn.setOnClickListener(){
-            placeholderCommunicationsProblem.visibility = View.INVISIBLE
             searchTrack()
         }
 
@@ -226,9 +222,10 @@ class SearchActivity : AppCompatActivity() {
 
             //Действие при вводе текста
             override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                searchDebounce()
                 searchClearIcon.visibility = searchClearIconVisibility(s)
                 textSearch = searchEditText.getText().toString()
+
+                if (s?.isEmpty() == false) searchDebounce()
 
                 //Убрать историю поиска с кнопкой, если ввод текста в фокусе и не пустой
                 historyList.visibility = if (searchEditText.hasFocus() && s?.isEmpty() == true) View.VISIBLE
@@ -268,6 +265,9 @@ class SearchActivity : AppCompatActivity() {
     //Поиск трека черезе Retrofit
     private fun searchTrack(){
         progressBar.visibility = View.VISIBLE
+        hideKeyboard()
+
+        tracksAdapter.setTracks(null)
 
         //Скрыть сообщения об ошибках
         placeholderNothingWasFound.isVisible = false
@@ -281,9 +281,7 @@ class SearchActivity : AppCompatActivity() {
                     if (response.code() == 200) {
                         if (!response.body()?.results.isNullOrEmpty()){
                             progressBar.visibility = View.GONE
-                            tracks.clear()
-                            tracks.addAll(response.body()?.results!!)
-                            tracksAdapter.notifyDataSetChanged()
+                            tracksAdapter.setTracks(response.body()?.results!!)
                             showMessageError(NetworkError.SuccessRequest())
                         }
                         else showMessageError(NetworkError.NoData())
@@ -299,6 +297,7 @@ class SearchActivity : AppCompatActivity() {
     //Обработка результатов запроса
     fun showMessageError(networkError: NetworkError){
         progressBar.visibility = View.GONE
+
         when (networkError){
             is NetworkError.SuccessRequest ->{
                 placeholderNothingWasFound.isVisible = false
@@ -314,7 +313,10 @@ class SearchActivity : AppCompatActivity() {
                 placeholderNothingWasFound.isVisible = false
             }
 
-            else -> {}
+            else -> {
+                placeholderNothingWasFound.isVisible = true
+                placeholderCommunicationsProblem.isVisible = false
+            }
         }
     }
 
@@ -329,13 +331,8 @@ class SearchActivity : AppCompatActivity() {
     private fun openMedia(track: Track,position: Int) {
         if (clickDebounce()) {
             searchHistory.addTrack(track, position)
-
             historyTracks = searchHistory.tracksHistoryFromJson() as ArrayList<Track>
-
-            tracksHistoryAdapter.setTracks(null)
             tracksHistoryAdapter.setTracks(historyTracks)
-
-            tracksHistoryAdapter.notifyDataSetChanged()
             sendToMedia(track)
         }
     }

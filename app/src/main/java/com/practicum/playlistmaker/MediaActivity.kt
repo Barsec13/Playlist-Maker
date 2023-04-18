@@ -22,7 +22,6 @@ class MediaActivity : AppCompatActivity() {
     //Переменные
     lateinit var buttonArrowBackSettings: androidx.appcompat.widget.Toolbar
     lateinit var track: Track
-    lateinit var sharedPrefDataTrack: SharedPreferences
     lateinit var artworkUrl100: ImageView
     lateinit var trackName: TextView
     lateinit var artistName: TextView
@@ -32,7 +31,6 @@ class MediaActivity : AppCompatActivity() {
     lateinit var primaryGenreName: TextView
     lateinit var country: TextView
     lateinit var duration: TextView
-    lateinit var sharePrefDataTrack: SharedPreferences
     lateinit var previewUrl: String
     lateinit var buttonPlay:FloatingActionButton
 
@@ -105,7 +103,6 @@ class MediaActivity : AppCompatActivity() {
         primaryGenreName = findViewById(R.id.primary_genre_name_data)
         country = findViewById(R.id.country_data)
         duration = findViewById(R.id.duration)
-        sharedPrefDataTrack = getSharedPreferences(DATA_TRACK, MODE_PRIVATE)
         buttonPlay = findViewById(R.id.play_track)
     }
 
