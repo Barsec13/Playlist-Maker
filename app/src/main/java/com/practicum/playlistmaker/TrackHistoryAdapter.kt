@@ -3,7 +3,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 class TrackHistoryAdapter(
-    var tracksHistory: ArrayList<Track>
+    private var tracksHistory: ArrayList<Track>
 ) : RecyclerView.Adapter<TrackViewHolder> (){
 
     var itemClickListener: ((Int, Track) -> Unit)? = null
@@ -24,4 +24,11 @@ class TrackHistoryAdapter(
         return tracksHistory.size
     }
 
+    fun setTracks(newTracks: List<Track>?) {
+        tracksHistory.clear()
+        if (!newTracks.isNullOrEmpty()) {
+            tracksHistory.addAll(newTracks)
+        }
+        notifyDataSetChanged()
+    }
 }

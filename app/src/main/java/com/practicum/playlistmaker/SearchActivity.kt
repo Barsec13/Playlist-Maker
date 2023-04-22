@@ -4,6 +4,8 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -20,7 +22,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 const val HISTORY_TRACKS_SHARED_PREF = "history_tracks_shared_pref"
-const val DATA_TRACK = "data_track"
 
 class SearchActivity : AppCompatActivity() {
     //Переменная для работы с вводимым запросом
@@ -37,13 +38,13 @@ class SearchActivity : AppCompatActivity() {
     lateinit var historyList: LinearLayout
     lateinit var buttonClear: Button
     lateinit var sharedPref: SharedPreferences
-    lateinit var sharePrefDataTrack: SharedPreferences
     lateinit var searchHistory: SearchHistory
+    lateinit var progressBar: ProgressBar
+    private val handler: Handler = Handler(Looper.getMainLooper())
 
 
     //Базовый URL iTunes Search API
-    private var baseURLiTunesSearchAPI = "https://itunes.apple.com"
-
+    private val baseURLiTunesSearchAPI = "https://itunes.apple.com"
 
     //Подключаем Retrofit
     private val retrofit = Retrofit.Builder()
@@ -74,8 +75,32 @@ class SearchActivity : AppCompatActivity() {
 
         //Работа с вводимым текстом
         inputText()
+    }
 
-        //tracksHistoryAdapter.notifyDataSetChanged()
+    companion object {
+        private const val TEXT_SEARCH = "TEXT_SEARCH"
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+    }
+
+    //Запускаем поиск, если пользователь 2 секунды не вводит текст
+    private val searchRunnable = Runnable {searchTrack() }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    //Ограничение двойного нажатия на трек для открытия плеера
+    private var isClickAllowed = true
+
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
     }
 
     //Присвоить значение переменным
@@ -88,10 +113,10 @@ class SearchActivity : AppCompatActivity() {
         buttonReturn = findViewById(R.id.button_return)
         historyList = findViewById(R.id.history_list)
         buttonClear = findViewById(R.id.button_clear_history)
+        progressBar = findViewById(R.id.progressBar)
 
         //Shared Preferences
         sharedPref = getSharedPreferences(HISTORY_TRACKS_SHARED_PREF, MODE_PRIVATE)
-        sharePrefDataTrack = getSharedPreferences(DATA_TRACK, MODE_PRIVATE)
 
         //Объект класса для работы с историей поиске
         searchHistory = SearchHistory(sharedPref)
@@ -115,37 +140,35 @@ class SearchActivity : AppCompatActivity() {
         buttonClear.setOnClickListener(){
             searchHistory.clearHistory()
             historyTracks = searchHistory.tracksHistoryFromJson() as ArrayList<Track>
-            tracksHistoryAdapter.tracksHistory.clear()
-            tracksHistoryAdapter.notifyDataSetChanged()
+            tracksHistoryAdapter.setTracks(null)
             historyList.visibility = View.GONE
         }
 
-
         searchClearIcon.setOnClickListener {
-            //Объект для работы с клавиатурой
-            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            hideKeyboard()
             //Очистить поле для ввода
             searchEditText.setText("")
-            //Скрыть клавиатуру
-            inputMethodManager?.hideSoftInputFromWindow(searchEditText.windowToken, 0)
+
+            historyList.visibility = View.GONE
 
             //Убрать информацию о неудачных запросах
             placeholderNothingWasFound.isVisible  = false
             placeholderCommunicationsProblem.isVisible = false
+
             //Очистить найденный список треков
-            tracks.clear()
-            tracksAdapter.notifyDataSetChanged()
+            tracksAdapter.setTracks(null)
 
             //Показать историю поисков
-            historyList.visibility = View.VISIBLE
             historyTracks = searchHistory.tracksHistoryFromJson() as ArrayList<Track>
-            tracksHistoryAdapter.tracksHistory = historyTracks
-            tracksHistoryAdapter.notifyDataSetChanged()
+            tracksHistoryAdapter.setTracks(historyTracks)
+            if (historyTracks.isNotEmpty()) historyList.visibility = View.VISIBLE
+            //Скрыть progressBar
+            progressBar.visibility = View.GONE
         }
 
         //Поиск трека
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
+            if (actionId == EditorInfo.IME_ACTION_DONE && !textSearch.equals("")) {
                 searchTrack()
                 true
             }
@@ -154,32 +177,16 @@ class SearchActivity : AppCompatActivity() {
 
         //Повторить предыдущий запрос после нажатия на кнопку "Обновить"
         buttonReturn.setOnClickListener(){
-            placeholderCommunicationsProblem.visibility = View.INVISIBLE
             searchTrack()
         }
 
         //Обработать нажатие на View трека в поиске
         tracksAdapter.itemClickListener = { position, track ->
-            //Добавить трек в историю
-            searchHistory.addTrack(track, position)
-            historyTracks = searchHistory.tracksHistoryFromJson() as ArrayList<Track>
-            historyTracks.addAll(historyTracks)
-            //Открыть плеер с данными трека
-            sharePrefDataTrack.edit().putString(DATA_TRACK, Gson().toJson(track)).apply()
-            val searchIntent = Intent(this@SearchActivity, MediaActivity::class.java)
-            startActivity(searchIntent)
+            openMedia(track,position)
         }
 
         tracksHistoryAdapter.itemClickListener = { position, track ->
-            searchHistory.addTrack(track, position)
-            historyTracks = searchHistory.tracksHistoryFromJson() as ArrayList<Track>
-            //historyTracks.addAll(historyTracks)
-            tracksHistoryAdapter.tracksHistory.clear()
-            tracksHistoryAdapter.tracksHistory = historyTracks
-            tracksHistoryAdapter.notifyDataSetChanged()
-            sharePrefDataTrack.edit().putString(DATA_TRACK, Gson().toJson(track)).apply()
-            val searchIntent = Intent(this@SearchActivity, MediaActivity::class.java)
-            startActivity(searchIntent)
+            openMedia(track,position)
         }
     }
 
@@ -198,6 +205,10 @@ class SearchActivity : AppCompatActivity() {
 
     //Отображение истории поиска
     private fun visibleHistoryTrack(){
+        //Скрыть сообщения об ошибках
+        placeholderNothingWasFound.isVisible = false
+        placeholderCommunicationsProblem.isVisible = false
+
         if (historyTracks.isNotEmpty()) historyList.visibility = View.VISIBLE
         else historyList.visibility = View.GONE
     }
@@ -213,6 +224,8 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 searchClearIcon.visibility = searchClearIconVisibility(s)
                 textSearch = searchEditText.getText().toString()
+
+                if (s?.isEmpty() == false) searchDebounce()
 
                 //Убрать историю поиска с кнопкой, если ввод текста в фокусе и не пустой
                 historyList.visibility = if (searchEditText.hasFocus() && s?.isEmpty() == true) View.VISIBLE
@@ -249,24 +262,26 @@ class SearchActivity : AppCompatActivity() {
         searchEditText.setText(textSearch)
     }
 
-    companion object {
-        const val TEXT_SEARCH = "TEXT_SEARCH"
-    }
-
     //Поиск трека черезе Retrofit
     private fun searchTrack(){
+        progressBar.visibility = View.VISIBLE
+        hideKeyboard()
+
+        tracksAdapter.setTracks(null)
+
+        //Скрыть сообщения об ошибках
+        placeholderNothingWasFound.isVisible = false
+        placeholderCommunicationsProblem.isVisible = false
+
         serviceiTunesSearch.searchTrack(searchEditText.text.toString())
             .enqueue(object : Callback<TrackResponse>{
-
                 override fun onResponse(
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>) {
-
                     if (response.code() == 200) {
                         if (!response.body()?.results.isNullOrEmpty()){
-                            tracks.clear()
-                            tracks.addAll(response.body()?.results!!)
-                            tracksAdapter.notifyDataSetChanged()
+                            progressBar.visibility = View.GONE
+                            tracksAdapter.setTracks(response.body()?.results!!)
                             showMessageError(NetworkError.SuccessRequest())
                         }
                         else showMessageError(NetworkError.NoData())
@@ -281,6 +296,8 @@ class SearchActivity : AppCompatActivity() {
 
     //Обработка результатов запроса
     fun showMessageError(networkError: NetworkError){
+        progressBar.visibility = View.GONE
+
         when (networkError){
             is NetworkError.SuccessRequest ->{
                 placeholderNothingWasFound.isVisible = false
@@ -295,6 +312,34 @@ class SearchActivity : AppCompatActivity() {
                 placeholderCommunicationsProblem.isVisible = true
                 placeholderNothingWasFound.isVisible = false
             }
+
+            else -> {
+                placeholderNothingWasFound.isVisible = true
+                placeholderCommunicationsProblem.isVisible = false
+            }
         }
+    }
+
+    //Передача данных через intent
+    private fun sendToMedia(track : Track){
+        val searchIntent = Intent(this@SearchActivity, MediaActivity::class.java).apply {
+            putExtra(SEND_TRACK, Gson().toJson(track))
+        }
+        startActivity(searchIntent)
+    }
+
+    private fun openMedia(track: Track,position: Int) {
+        if (clickDebounce()) {
+            searchHistory.addTrack(track, position)
+            historyTracks = searchHistory.tracksHistoryFromJson() as ArrayList<Track>
+            tracksHistoryAdapter.setTracks(historyTracks)
+            sendToMedia(track)
+        }
+    }
+
+    private fun hideKeyboard(){
+        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        //Скрыть клавиатуру
+        inputMethodManager?.hideSoftInputFromWindow(searchEditText.windowToken, 0)
     }
 }

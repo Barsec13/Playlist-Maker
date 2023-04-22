@@ -32,4 +32,5 @@
     <dimen name="margin_bottom_54">54dp</dimen>
     <dimen name="margin_bottom_24">24dp</dimen>
     <dimen name="margin_bottom_12">12dp</dimen>
+    <dimen name="sizeProgressBar">44dp</dimen>
 </resources>

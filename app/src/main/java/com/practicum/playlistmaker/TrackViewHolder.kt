@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.practicum.playlistmaker.TimeUtils.formatTrackDuraction
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,7 +26,7 @@ class TrackViewHolder(parentView: ViewGroup): RecyclerView.ViewHolder(
         //Присваивание данных параметрам view-элементов из объекта Track
         trackName.text = model.trackName
         artistName.text = model.artistName
-        trackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis.toInt())
+        trackTime.text = formatTrackDuraction(model.trackTimeMillis.toInt())
 
         //Передача картинки из интернета с помощью библиотеки Glide
         Glide.with(itemView)

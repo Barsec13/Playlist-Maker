@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 class TrackAdapter(
-    private val tracks: List<Track>
+    private val tracks: ArrayList<Track>
 ) : RecyclerView.Adapter<TrackViewHolder> (){
 
     var itemClickListener: ((Int, Track) -> Unit)? = null
@@ -23,6 +23,14 @@ class TrackAdapter(
 
     override fun getItemCount(): Int {
         return tracks.size
+    }
+
+    fun setTracks(newTracks: List<Track>?) {
+        tracks.clear()
+        if (!newTracks.isNullOrEmpty()) {
+            tracks.addAll(newTracks)
+        }
+        notifyDataSetChanged()
     }
 
 }

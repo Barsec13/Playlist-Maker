@@ -40,7 +40,7 @@
         <item name="android:checked">false</item>
     </style>
 
-    <style name="text_panel_header">
+    <style name="textPanelHeader">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">?attr/colorOnSecondary</item>
@@ -50,20 +50,20 @@
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
 
-    <style name="panel_header_toolbar">
+    <style name="panelHeaderToolbar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">@dimen/padding_4_for_settings</item>
         <item name="android:layout_marginBottom">@dimen/margin_button</item>
         <item name="android:background">?attr/colorSecondary</item>
-        <item name="titleTextAppearance">@style/text_panel_header</item>
+        <item name="titleTextAppearance">@style/textPanelHeader</item>
         <item name="navigationIcon">@drawable/ic_arrow_back</item>
         <item name="contentInsetStart">0dp</item>
         <item name="contentInsetStartWithNavigation">0dp</item>
         <item name="titleMarginStart">0dp</item>
     </style>
 
-    <style name="text_track_view">
+    <style name="textTrackView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">?attr/colorSecondaryVariant</item>
@@ -74,11 +74,11 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="search_button_refresh">
+    <style name="searchButtonRefresh">
         <item name="cornerRadius">54dp</item>
     </style>
 
-    <style name="search_textview">
+    <style name="searchTextview">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">@dimen/margin_text_search_24</item>
@@ -91,14 +91,14 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="search_image">
+    <style name="searchImage">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center_vertical|center</item>
         <item name="android:layout_marginBottom">@dimen/search_margin_image</item>
     </style>
 
-    <style name="search_plaseholder">
+    <style name="searchPlaceholder">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">86dp</item>
@@ -106,12 +106,12 @@
         <item name="android:visibility">invisible</item>
     </style>
 
-    <style name="settings_switch_material">
+    <style name="settingsSwitchMaterial">
         <item name="android:trackTint" tools:targetApi="m">@color/light_gray</item>
         <item name="android:thumbTint">@color/gray</item>
     </style>
 
-    <style name="data_name_track">
+    <style name="dataNameTrack">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">@dimen/margin_media</item>
@@ -124,8 +124,8 @@
         <item name="layout_constraintStart_toStartOf">@id/left_guideline</item>
     </style>
 
-    <style name="data_track">
-        <item name="android:layout_width">wrap_content</item>
+    <style name="dataTrack">
+        <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:fontFamily">@font/ys_text_regular</item>
         <item name="android:textSize">13sp</item>
@@ -134,5 +134,20 @@
         <item name="android:layout_marginEnd">@dimen/margin_media</item>
         <item name="android:layout_marginBottom">@dimen/margin_media</item>
         <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="layout_constraintStart_toEndOf">@id/barrier</item>
+        <item name="android:gravity">end</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="buttonPlayPause">
+        <item name="android:layout_width">84dp</item>
+        <item name="android:layout_height">84dp</item>
+        <item name="maxImageSize">64dp</item>
+        <item name="fabCustomSize">84dp</item>
+        <item name="android:foregroundGravity">center</item>
+        <item name="elevation">0dp</item>
+        <item name="backgroundTint">?attr/colorOnSecondary</item>
+        <item name="tint">?attr/colorSecondary</item>
+        <item name="android:enabled">false</item>
     </style>
 </resources>
