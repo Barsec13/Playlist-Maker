@@ -1,6 +1,7 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.search.presentation
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.practicum.playlistmaker.domain.models.Track
 
 class TrackHistoryAdapter(
     private var tracksHistory: ArrayList<Track>

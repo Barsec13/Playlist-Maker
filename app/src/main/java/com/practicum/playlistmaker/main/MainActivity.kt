@@ -1,11 +1,13 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.main
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
-import android.widget.Toast
+import com.practicum.playlistmaker.media.presentation.MediaActivity
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.search.presentation.SearchActivity
+import com.practicum.playlistmaker.settings.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
     //Переменные для работы с UI

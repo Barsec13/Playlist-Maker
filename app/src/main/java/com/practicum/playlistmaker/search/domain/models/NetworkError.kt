@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.search.domain.models
 
 //Случаи ошибок или результатов при запросе
 sealed class NetworkError(){
