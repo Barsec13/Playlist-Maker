@@ -1,20 +1,22 @@
 package com.practicum.playlistmaker.search.presentation
 
-import com.practicum.playlistmaker.search.domain.models.NetworkError
+import com.practicum.playlistmaker.search.domain.models.NetworkResponse
 import com.practicum.playlistmaker.search.domain.api.SearchInteractor
-import com.practicum.playlistmaker.domain.models.Track
+import com.practicum.playlistmaker.media.domain.model.Track
 
 class SearchPresenter(
     private val view: SearchViewActivity,
     private val searchInteractor: SearchInteractor,
-    private val searchRouter: SearchRouter
+    private val searchRouter: SearchRouter,
 ) {
-    fun clickButtonClearHistory(){
+    fun clickButtonClearHistory() {
         searchInteractor.clearHistory()
+        view.hideHistoryList()
         view.refreshHistory(searchInteractor.tracksHistoryFromJson())
     }
 
-    fun visibleHistoryTrack(historyTracks:List<Track>){
+    fun visibleHistoryTrack() {
+        val historyTracks = tracksHistoryFromJson()
         view.hideKeyboard()
         view.hideMessageError()
         view.refreshHistory(historyTracks)
@@ -22,34 +24,33 @@ class SearchPresenter(
 
         if (historyTracks.isNotEmpty()) {
             view.showHistoryList()
-        }
-        else
+        } else
             view.hideHistoryList()
     }
 
-    fun loadTracks(searchText: String){
+    fun loadTracks(searchText: String) {
         if (searchText.isEmpty()) return
         view.hideKeyboard()
         view.hideMessageError()
         view.showLoad()
         searchInteractor.loadTracks(
             searchText = searchText,
-            onSuccess = {tracks ->
+            onSuccess = { tracks ->
                 view.hideLoad()
                 view.showTracks(tracks)
-                view.showMessageError(NetworkError.SuccessRequest())
+                view.showMessageError(NetworkResponse.SuccessRequest())
             },
             noData = {
                 view.hideLoad()
-                view.showMessageError(NetworkError.NoData())
+                view.showMessageError(NetworkResponse.NoData())
             },
             serverError = {
                 view.hideLoad()
-                view.showMessageError(NetworkError.ServerError())
+                view.showMessageError(NetworkResponse.ServerResponse())
             },
             noInternet = {
                 view.hideLoad()
-                view.showMessageError(NetworkError.NoInternet())
+                view.showMessageError(NetworkResponse.NoInternet())
             }
         )
     }
@@ -60,10 +61,10 @@ class SearchPresenter(
         view.hideMessageError()
         view.hideLoad()
         view.showTracks(emptyList())
-        visibleHistoryTrack(searchInteractor.tracksHistoryFromJson())
+        visibleHistoryTrack()
     }
 
-    fun btnArrowBackClick(){
+    fun btnArrowBackClick() {
         searchRouter.backView()
     }
 
@@ -71,5 +72,9 @@ class SearchPresenter(
         searchInteractor.addTrack(track, position)
         searchRouter.sendToMedia(track)
         view.refreshHistory(searchInteractor.tracksHistoryFromJson())
+    }
+
+    fun tracksHistoryFromJson(): List<Track>{
+        return searchInteractor.tracksHistoryFromJson()
     }
 }

@@ -1,4 +1,5 @@
 package com.practicum.playlistmaker.search.presentation
+
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
@@ -13,20 +14,15 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.practicum.playlistmaker.search.domain.models.NetworkError
+import com.practicum.playlistmaker.search.domain.models.NetworkResponse
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.search.domain.impl.SearchInteractorImpl
-import com.practicum.playlistmaker.domain.models.Track
+import com.practicum.playlistmaker.media.domain.model.Track
 import com.practicum.playlistmaker.Constant.CLICK_DEBOUNCE_DELAY
 import com.practicum.playlistmaker.Constant.SEARCH_DEBOUNCE_DELAY
-import com.practicum.playlistmaker.creator.Creator
-import com.practicum.playlistmaker.search.data.network.NetworkClient
-import com.practicum.playlistmaker.search.data.network.NetworkClientImpl
-import com.practicum.playlistmaker.search.data.network.iTunesSearchAPI
-import com.practicum.playlistmaker.search.data.sharedpreferences.SearchHistoryImpl
+import com.practicum.playlistmaker.search.creator.CreatorSearch
+import com.practicum.playlistmaker.search.data.sharedpreferences.SharedPreferencesClientImpl
 import com.practicum.playlistmaker.search.data.sharedpreferences.SharedPreferencesClient
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 const val HISTORY_TRACKS_SHARED_PREF = "history_tracks_shared_pref"
 
@@ -44,26 +40,13 @@ class SearchActivity : AppCompatActivity(), SearchViewActivity {
     lateinit var historyList: LinearLayout
     lateinit var buttonClear: Button
     lateinit var sharedPref: SharedPreferences
-    lateinit var sharedPreferencesClientImpl: SharedPreferencesClient
     lateinit var progressBar: ProgressBar
     lateinit var recyclerView: RecyclerView
     lateinit var recyclerViewHistory: RecyclerView
 
-    private val handler: Handler = Handler(Looper.getMainLooper())
-
-    //Базовый URL iTunes Search API
-    private val baseURLiTunesSearchAPI = "https://itunes.apple.com"
-
-    //Подключаем Retrofit
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(baseURLiTunesSearchAPI)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    //Репозиторий для запросов в сеть
-    private val networkClient: NetworkClient = NetworkClientImpl(retrofit.create(iTunesSearchAPI::class.java))
-
     private lateinit var searchPresenter: SearchPresenter
+
+    private val handler: Handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,10 +58,10 @@ class SearchActivity : AppCompatActivity(), SearchViewActivity {
         //Инициализация истории поиска
         initSearchHistory()
 
-        searchPresenter = Creator.provideSearchPresenter(
+        searchPresenter = CreatorSearch.provideSearchPresenter(
+            viewSearch = this,
             view = this,
-            searchInteractor = SearchInteractorImpl(sharedPreferencesClientImpl, networkClient),
-              searchRouter = SearchRouter(this)
+            sharedPreferences = sharedPref,
         )
 
         //RecyclerView
@@ -107,19 +90,17 @@ class SearchActivity : AppCompatActivity(), SearchViewActivity {
 
     }
 
-    private fun textSearch(): String{
+    private fun textSearch(): String {
         return searchEditText.getText().toString()
     }
+
     private fun initSearchHistory() {
         //Shared Preferences
         sharedPref = getSharedPreferences(HISTORY_TRACKS_SHARED_PREF, MODE_PRIVATE)
-
-        //Объект класса для работы с историей поиске
-        sharedPreferencesClientImpl = SearchHistoryImpl(sharedPref)
     }
 
     //Настроить RecyclerView
-    private fun initAdapter(){
+    private fun initAdapter() {
         tracksAdapter = TrackAdapter(ArrayList<Track>())
         recyclerView.adapter = tracksAdapter
 
@@ -172,8 +153,11 @@ class SearchActivity : AppCompatActivity(), SearchViewActivity {
 
                 //Убрать историю поиска с кнопкой и показать значек очисткиЫ, если ввод текста в фокусе и не пустой
                 searchClearIcon.visibility =
-                    if (s.isNullOrEmpty()) { View.GONE }
-                    else { View.VISIBLE }
+                    if (s.isNullOrEmpty()) {
+                        View.GONE
+                    } else {
+                        View.VISIBLE
+                    }
 
                 historyList.visibility =
                     if (searchEditText.hasFocus() && s?.isEmpty() == true) View.VISIBLE
@@ -188,13 +172,15 @@ class SearchActivity : AppCompatActivity(), SearchViewActivity {
         //Обработать нажатие на View трека в поиске
         tracksAdapter.itemClickListener = { position, track ->
             if (clickDebounce()) {
-                searchPresenter.onTrackClick(track, position)}
+                searchPresenter.onTrackClick(track, position)
+            }
         }
 
         //Обработать нажатие на View трека в истории поиска
         tracksHistoryAdapter.itemClickListener = { position, track ->
             if (clickDebounce()) {
-                searchPresenter.onTrackClick(track, position)}
+                searchPresenter.onTrackClick(track, position)
+            }
         }
     }
 
@@ -206,39 +192,41 @@ class SearchActivity : AppCompatActivity(), SearchViewActivity {
         progressBar.visibility = View.GONE
     }
 
-    override fun hideKeyboard(){
-        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+    override fun hideKeyboard() {
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         //Скрыть клавиатуру
         inputMethodManager?.hideSoftInputFromWindow(searchEditText.windowToken, 0)
     }
 
-    fun searchTracks(){
+    fun searchTracks() {
         searchPresenter.loadTracks(textSearch())
     }
 
     //Запускаем поиск, если пользователь 2 секунды не вводит текст
-        private val searchRunnable = Runnable { searchTracks() }
+    private val searchRunnable = Runnable { searchTracks() }
 
-        private fun searchDebounce() {
-            handler.removeCallbacks(searchRunnable)
-            handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    //Ограничение двойного нажатия на трек для открытия плеера
+    private var isClickAllowed = true
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
         }
+        return current
+    }
 
-        //Ограничение двойного нажатия на трек для открытия плеера
-        private var isClickAllowed = true
-
-        private fun clickDebounce(): Boolean {
-            val current = isClickAllowed
-            if (isClickAllowed) {
-                isClickAllowed = false
-                handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-            }
-            return current
-        }
-
-    override fun refreshHistory(historyTracks: List<Track>){
-//        this.historyTracks = historyTracks as ArrayList<Track>
-        tracksHistoryAdapter.setTracks(sharedPreferencesClientImpl.tracksHistoryFromJson())
+    override fun refreshHistory(historyTracks: List<Track>) {
+        tracksHistoryAdapter.setTracks(
+            searchPresenter.tracksHistoryFromJson()
+        )
     }
 
     override fun clearTextSearch() {
@@ -246,8 +234,8 @@ class SearchActivity : AppCompatActivity(), SearchViewActivity {
     }
 
     //Отображение истории поиска
-    private fun visibleHistoryTrack(){
-        searchPresenter.visibleHistoryTrack(sharedPreferencesClientImpl.tracksHistoryFromJson())
+    private fun visibleHistoryTrack() {
+        searchPresenter.visibleHistoryTrack()
         //Скрыть сообщения об ошибках
     }
 
@@ -269,19 +257,20 @@ class SearchActivity : AppCompatActivity(), SearchViewActivity {
     }
 
     //Обработка результатов запроса
-    override fun showMessageError(networkError: NetworkError){
+    override fun showMessageError(networkResponse: NetworkResponse) {
 
-        when (networkError){
-            is NetworkError.SuccessRequest ->{
+        when (networkResponse) {
+            is NetworkResponse.SuccessRequest -> {
                 placeholderNothingWasFound.isVisible = false
                 placeholderCommunicationsProblem.isVisible = false
             }
-            is NetworkError.NoData ->{
+
+            is NetworkResponse.NoData -> {
                 placeholderNothingWasFound.isVisible = true
                 placeholderCommunicationsProblem.isVisible = false
             }
 
-            is NetworkError.NoInternet -> {
+            is NetworkResponse.NoInternet -> {
                 placeholderCommunicationsProblem.isVisible = true
                 placeholderNothingWasFound.isVisible = false
             }

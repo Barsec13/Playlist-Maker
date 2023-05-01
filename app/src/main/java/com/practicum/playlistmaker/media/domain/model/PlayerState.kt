@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.domain.models
+package com.practicum.playlistmaker.media.domain.model
 
 enum class PlayerState {
     STATE_DEFAULT,

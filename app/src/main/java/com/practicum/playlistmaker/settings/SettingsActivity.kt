@@ -21,10 +21,11 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val buttonArrowBackSettings = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbarSetting)
+        val buttonArrowBackSettings =
+            findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbarSetting)
         //Обработка нажатия на ToolBar "<-" и переход
         // на главный экран через закрытие экрана "Настройки"
-        buttonArrowBackSettings.setOnClickListener(){
+        buttonArrowBackSettings.setOnClickListener() {
             finish()
         }
 
@@ -44,8 +45,8 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         //Реализация кнопки "Поддержка"
-        buttonSupport.setOnClickListener(){
-            Intent(Intent.ACTION_SEND).apply{
+        buttonSupport.setOnClickListener() {
+            Intent(Intent.ACTION_SEND).apply {
                 val message = getString(R.string.message)
                 val subject = getString(R.string.subject)
                 val emailDeveloper = getString(R.string.email_developer)
@@ -58,7 +59,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         //Реализация кнопки пользовательское соглашение
-        buttonUserAgreement.setOnClickListener(){
+        buttonUserAgreement.setOnClickListener() {
             val linkToTheOffer = getString(R.string.link_to_the_offer)
             val uriUserAgreement = Uri.parse(linkToTheOffer)
             val intent = Intent(Intent.ACTION_VIEW, uriUserAgreement)
@@ -68,11 +69,12 @@ class SettingsActivity : AppCompatActivity() {
         //Реализация переключателя темы
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
 
-        themeSwitcher.isChecked = getSharedPreferences(PLAY_LIST_MAKER_SHARED_PREFERENCES, MODE_PRIVATE)
-            .getBoolean(DARK_THEME_KEY, false)
+        themeSwitcher.isChecked =
+            getSharedPreferences(PLAY_LIST_MAKER_SHARED_PREFERENCES, MODE_PRIVATE)
+                .getBoolean(DARK_THEME_KEY, false)
 
-        themeSwitcher.setOnCheckedChangeListener {switcher, checked ->
-           (applicationContext as App).switchTheme(checked)
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
             (applicationContext as App).saveTheme(checked)
         }
     }

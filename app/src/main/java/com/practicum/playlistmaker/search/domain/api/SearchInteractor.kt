@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker.search.domain.api
 
-import com.practicum.playlistmaker.domain.models.Track
+import com.practicum.playlistmaker.media.domain.model.Track
 
 interface SearchInteractor {
     fun clearHistory()
@@ -14,5 +14,6 @@ interface SearchInteractor {
         onSuccess: (List<Track>) -> Unit,
         noData: () -> Unit,
         serverError: () -> Unit,
-        noInternet: () -> Unit)
+        noInternet: () -> Unit,
+    )
 }

@@ -3,7 +3,7 @@ package com.practicum.playlistmaker.media.data
 import android.media.MediaPlayer
 import com.practicum.playlistmaker.media.domain.api.PlayerStateListener
 import com.practicum.playlistmaker.media.domain.api.TrackPlayer
-import com.practicum.playlistmaker.domain.models.PlayerState
+import com.practicum.playlistmaker.media.domain.model.PlayerState
 
 class TrackPlayerImpl(private val previewUrl: String): TrackPlayer {
 

@@ -1,11 +1,11 @@
-package com.practicum.playlistmaker.media.domain.imlp
+package com.practicum.playlistmaker.media.domain.impl
 
 import com.practicum.playlistmaker.TimeUtils.formatTrackDuraction
 import com.practicum.playlistmaker.media.domain.api.MediaInteractor
 import com.practicum.playlistmaker.media.domain.api.PlayerStateListener
 import com.practicum.playlistmaker.media.domain.api.TrackPlayer
 
-class MediaInteractorImpl(private val trackPlayer: TrackPlayer): MediaInteractor {
+class MediaInteractorImpl(private val trackPlayer: TrackPlayer) : MediaInteractor {
     override fun preparePlayer() {
         trackPlayer.preparePlayer()
     }
@@ -26,7 +26,7 @@ class MediaInteractorImpl(private val trackPlayer: TrackPlayer): MediaInteractor
         trackPlayer.listener = null
     }
 
-    override fun releasePlayer(){
+    override fun releasePlayer() {
         trackPlayer.releasePlayer()
     }
 

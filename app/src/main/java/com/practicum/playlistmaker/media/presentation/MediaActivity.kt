@@ -12,11 +12,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.TimeUtils.formatTrackDuraction
 import com.practicum.playlistmaker.Constant.delayMillis
-import com.practicum.playlistmaker.creator.Creator
-import com.practicum.playlistmaker.domain.models.Track
+import com.practicum.playlistmaker.media.creator.CreatorMedia
+import com.practicum.playlistmaker.search.creator.CreatorSearch
+import com.practicum.playlistmaker.media.domain.model.Track
 
-
-class MediaActivity : AppCompatActivity(), MediaView{
+class MediaActivity : AppCompatActivity(), MediaView {
 
     //Переменные
     lateinit var buttonArrowBackSettings: androidx.appcompat.widget.Toolbar
@@ -31,11 +31,10 @@ class MediaActivity : AppCompatActivity(), MediaView{
     lateinit var country: TextView
     lateinit var duration: TextView
     lateinit var previewUrl: String
-    lateinit var buttonPlay:FloatingActionButton
+    lateinit var buttonPlay: FloatingActionButton
 
     var handler = Handler(Looper.getMainLooper())
     private lateinit var mediaPresenter: MediaPresenter
-    private lateinit var mediaRouter: MediaRouter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,9 +43,10 @@ class MediaActivity : AppCompatActivity(), MediaView{
         //Присвоить значение переменным
         initViews()
 
-        mediaRouter = MediaRouter(this)
-
-        mediaPresenter = Creator.provideMediaPresenter(mediaRouter = mediaRouter, view = this)
+        mediaPresenter = CreatorMedia.provideMediaPresenter(
+            mediaRouter = MediaRouter(this),
+            view = this
+        )
 
         //Listener
         setListeners()
@@ -94,20 +94,20 @@ class MediaActivity : AppCompatActivity(), MediaView{
         // на главный экран через закрытие экрана "Настройки"
         buttonArrowBackSettings.setOnClickListener() {
             handler.removeCallbacksAndMessages(null)
-            mediaRouter.backView()
+            mediaPresenter.clickArrowBack()
         }
-        buttonPlay.setOnClickListener(){
+        buttonPlay.setOnClickListener() {
             handler.removeCallbacksAndMessages(null)
             mediaPresenter.playbackControl()
         }
     }
 
     //Отображение данных трека
-    fun getInfoTrack(){
+    fun getInfoTrack() {
         mediaPresenter.loadInfoTrack()
     }
-    override fun showDataTrack(track: Track){
 
+    override fun showDataTrack(track: Track) {
         // Ссылка на пробный кусок песни
         previewUrl = track.previewUrl
         trackName.text = track.trackName
@@ -133,7 +133,7 @@ class MediaActivity : AppCompatActivity(), MediaView{
         mediaPresenter.startPreparePlayer()
     }
 
-    override fun preparePlayer(){
+    override fun preparePlayer() {
         buttonPlay.isEnabled = true
         handler.removeCallbacksAndMessages(null)
         buttonPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
@@ -150,8 +150,8 @@ class MediaActivity : AppCompatActivity(), MediaView{
     }
 
     //Отображение времени от начала воспроизведения трека
-    private fun timerTrack(): Runnable{
-        return object : Runnable{
+    private fun timerTrack(): Runnable {
+        return object : Runnable {
             override fun run() {
                 duration.text = mediaPresenter.getCurrentPosition()
                 handler.postDelayed(this, delayMillis)
@@ -159,7 +159,7 @@ class MediaActivity : AppCompatActivity(), MediaView{
         }
     }
 
-    fun startTimer(){
+    fun startTimer() {
         handler.post(timerTrack())
     }
 }

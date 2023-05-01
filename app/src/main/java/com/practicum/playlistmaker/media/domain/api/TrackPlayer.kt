@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker.media.domain.api
 
-interface TrackPlayer{
+interface TrackPlayer {
     var listener: PlayerStateListener?
     fun preparePlayer()
     fun startPlayer()
