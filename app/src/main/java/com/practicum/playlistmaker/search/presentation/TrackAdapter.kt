@@ -1,11 +1,12 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.search.presentation
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.practicum.playlistmaker.media.domain.model.Track
 
 class TrackAdapter(
-    private val tracks: ArrayList<Track>
-) : RecyclerView.Adapter<TrackViewHolder> (){
+    private val tracks: ArrayList<Track>,
+) : RecyclerView.Adapter<TrackViewHolder>() {
 
     var itemClickListener: ((Int, Track) -> Unit)? = null
 
@@ -16,7 +17,7 @@ class TrackAdapter(
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         val track = tracks[position]
         holder.bind(track)
-        holder.itemView.setOnClickListener(){
+        holder.itemView.setOnClickListener() {
             itemClickListener?.invoke(position, track)
         }
     }

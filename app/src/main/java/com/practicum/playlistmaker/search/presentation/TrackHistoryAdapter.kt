@@ -1,10 +1,12 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.search.presentation
+
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.practicum.playlistmaker.media.domain.model.Track
 
 class TrackHistoryAdapter(
-    private var tracksHistory: ArrayList<Track>
-) : RecyclerView.Adapter<TrackViewHolder> (){
+    private var tracksHistory: ArrayList<Track>,
+) : RecyclerView.Adapter<TrackViewHolder>() {
 
     var itemClickListener: ((Int, Track) -> Unit)? = null
 
@@ -15,7 +17,7 @@ class TrackHistoryAdapter(
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         val track = tracksHistory[position]
         holder.bind(track)
-        holder.itemView.setOnClickListener(){
+        holder.itemView.setOnClickListener() {
             itemClickListener?.invoke(position, track)
         }
     }

@@ -1,7 +1,5 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.media.presentation
 
-import android.content.SharedPreferences
-import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -11,13 +9,13 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.gson.Gson
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.TimeUtils.formatTrackDuraction
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.practicum.playlistmaker.Constant.delayMillis
+import com.practicum.playlistmaker.media.creator.CreatorMedia
+import com.practicum.playlistmaker.media.domain.model.Track
 
-const val SEND_TRACK = "send_track"
-class MediaActivity : AppCompatActivity() {
+class MediaActivity : AppCompatActivity(), MediaView {
 
     //Переменные
     lateinit var buttonArrowBackSettings: androidx.appcompat.widget.Toolbar
@@ -32,20 +30,10 @@ class MediaActivity : AppCompatActivity() {
     lateinit var country: TextView
     lateinit var duration: TextView
     lateinit var previewUrl: String
-    lateinit var buttonPlay:FloatingActionButton
+    lateinit var buttonPlay: FloatingActionButton
 
     var handler = Handler(Looper.getMainLooper())
-
-    //Состояние медиаплеера
-    companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-    }
-    private var playerState = STATE_DEFAULT
-
-    private var mediaPlayer = MediaPlayer()
+    private lateinit var mediaPresenter: MediaPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,40 +42,33 @@ class MediaActivity : AppCompatActivity() {
         //Присвоить значение переменным
         initViews()
 
-        //Отображение данных трека
-        showDataTrack()
-
-        //Подготовка воспроизведения
-        preparePlayer()
+        mediaPresenter = CreatorMedia.provideMediaPresenter(
+            mediaRouter = MediaRouter(this),
+            view = this
+        )
 
         //Listener
         setListeners()
+
+        //Отображение данных трека
+
+        getInfoTrack()
+
+        //Подготовка воспроизведения
+        startPreparePlayer()
     }
 
     override fun onPause() {
         super.onPause()
         handler.removeCallbacksAndMessages(null)
-        pausePlayer()
+        mediaPresenter.pausePlayer()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
         duration.text = "00:00"
-        mediaPlayer.release()
-    }
-
-    //Настроить Listeners
-    private fun setListeners() {
-        //Обработка нажатия на ToolBar "<-" и переход
-        // на главный экран через закрытие экрана "Настройки"
-        buttonArrowBackSettings.setOnClickListener() {
-            finish()
-        }
-
-        buttonPlay.setOnClickListener(){
-            playbackControl()
-        }
+        mediaPresenter.onViewDestroyed()
     }
 
     //Инициализация переменных
@@ -106,11 +87,26 @@ class MediaActivity : AppCompatActivity() {
         buttonPlay = findViewById(R.id.play_track)
     }
 
+    //Настроить Listeners
+    private fun setListeners() {
+        //Обработка нажатия на ToolBar "<-" и переход
+        // на главный экран через закрытие экрана "Настройки"
+        buttonArrowBackSettings.setOnClickListener() {
+            handler.removeCallbacksAndMessages(null)
+            mediaPresenter.clickArrowBack()
+        }
+        buttonPlay.setOnClickListener() {
+            handler.removeCallbacksAndMessages(null)
+            mediaPresenter.playbackControl()
+        }
+    }
 
     //Отображение данных трека
-    private fun showDataTrack(){
-        track = Gson().fromJson(intent.getStringExtra(SEND_TRACK), Track::class.java) ?: return
+    fun getInfoTrack() {
+        mediaPresenter.loadInfoTrack()
+    }
 
+    override fun showDataTrack(track: Track) {
         // Ссылка на пробный кусок песни
         previewUrl = track.previewUrl
         trackName.text = track.trackName
@@ -132,58 +128,37 @@ class MediaActivity : AppCompatActivity() {
     }
 
     //Подготовить воспроизведение
-    private fun preparePlayer() {
-        mediaPlayer.setDataSource(previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            buttonPlay.isEnabled = true
-            playerState = STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            handler.removeCallbacksAndMessages(null)
-            buttonPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
-            duration.text = "00:00"
-            playerState = STATE_PREPARED
-        }
+    private fun startPreparePlayer() {
+        mediaPresenter.startPreparePlayer()
     }
 
-    //Воспроизвести трек
-    private fun startPlayer() {
-        mediaPlayer.start()
+    override fun preparePlayer() {
+        buttonPlay.isEnabled = true
+        handler.removeCallbacksAndMessages(null)
+        buttonPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+        duration.text = "00:00"
+    }
+
+    override fun startPlayer() {
         buttonPlay.setImageResource(R.drawable.ic_baseline_pause_24)
-        playerState = STATE_PLAYING
         startTimer()
     }
 
-    //Пауза
-    private fun pausePlayer() {
-        mediaPlayer.pause()
+    override fun pausePlayer() {
         buttonPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
-        handler.removeCallbacksAndMessages(null)
-        playerState = STATE_PAUSED
     }
 
-    private fun playbackControl() {
-        when(playerState) {
-            STATE_PLAYING -> {
-                pausePlayer()
-            }
-            STATE_PREPARED, STATE_PAUSED -> {
-                startPlayer()
-            }
-        }
-    }
-
-    private fun timerTrack(): Runnable{
-        return object : Runnable{
+    //Отображение времени от начала воспроизведения трека
+    private fun timerTrack(): Runnable {
+        return object : Runnable {
             override fun run() {
-                duration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
-                handler.postDelayed(this, 300)
+                duration.text = mediaPresenter.getCurrentPosition()
+                handler.postDelayed(this, delayMillis)
             }
         }
     }
 
-    private fun startTimer(){
+    fun startTimer() {
         handler.post(timerTrack())
     }
 }

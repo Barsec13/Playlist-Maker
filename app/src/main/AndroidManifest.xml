@@ -16,16 +16,16 @@
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
         tools:targetApi="33">
         <activity
-            android:name=".SearchActivity"
+            android:name=".search.presentation.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".MediaActivity"
+            android:name=".media.presentation.MediaActivity"
             android:exported="false" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
