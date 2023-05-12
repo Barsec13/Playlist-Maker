@@ -13,7 +13,6 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.TimeUtils.formatTrackDuraction
 import com.practicum.playlistmaker.Constant.delayMillis
 import com.practicum.playlistmaker.media.creator.CreatorMedia
-import com.practicum.playlistmaker.search.creator.CreatorSearch
 import com.practicum.playlistmaker.media.domain.model.Track
 
 class MediaActivity : AppCompatActivity(), MediaView {

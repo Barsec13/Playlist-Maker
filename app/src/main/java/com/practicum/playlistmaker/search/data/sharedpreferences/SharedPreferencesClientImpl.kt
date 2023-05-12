@@ -1,14 +1,9 @@
 package com.practicum.playlistmaker.search.data.sharedpreferences
 
-import android.content.Context
-import android.content.Context.MODE_PRIVATE
-import android.content.ContextWrapper
 import android.content.SharedPreferences
-import android.view.View
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.media.domain.model.Track
-import com.practicum.playlistmaker.search.presentation.HISTORY_TRACKS_SHARED_PREF
 
 const val HISTORY_TRACKS_KEY = "history_tracks_key"
 

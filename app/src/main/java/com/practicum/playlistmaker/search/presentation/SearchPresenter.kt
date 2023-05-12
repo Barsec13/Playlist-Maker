@@ -46,7 +46,7 @@ class SearchPresenter(
             },
             serverError = {
                 view.hideLoad()
-                view.showMessageError(NetworkResponse.ServerResponse())
+                view.showMessageError(NetworkResponse.ServerError())
             },
             noInternet = {
                 view.hideLoad()

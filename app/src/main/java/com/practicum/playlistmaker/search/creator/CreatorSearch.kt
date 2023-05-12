@@ -2,13 +2,7 @@ package com.practicum.playlistmaker.search.creator
 
 
 import android.content.SharedPreferences
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.practicum.playlistmaker.media.data.TrackPlayerImpl
-import com.practicum.playlistmaker.media.domain.impl.MediaInteractorImpl
-import com.practicum.playlistmaker.media.presentation.MediaPresenter
-import com.practicum.playlistmaker.media.presentation.MediaRouter
-import com.practicum.playlistmaker.media.presentation.MediaView
 import com.practicum.playlistmaker.search.data.network.NetworkClient
 import com.practicum.playlistmaker.search.data.network.NetworkClientImpl
 import com.practicum.playlistmaker.search.data.network.iTunesSearchAPI
@@ -27,8 +21,6 @@ object CreatorSearch {
         viewSearch: SearchViewActivity,
         view: AppCompatActivity,
         sharedPreferences: SharedPreferences
-//        searchInteractor: SearchInteractor,
-//        searchRouter: SearchRouter,
     ): SearchPresenter {
         return SearchPresenter(
             view = viewSearch,

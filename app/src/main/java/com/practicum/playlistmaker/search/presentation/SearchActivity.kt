@@ -16,13 +16,10 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.search.domain.models.NetworkResponse
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.search.domain.impl.SearchInteractorImpl
 import com.practicum.playlistmaker.media.domain.model.Track
 import com.practicum.playlistmaker.Constant.CLICK_DEBOUNCE_DELAY
 import com.practicum.playlistmaker.Constant.SEARCH_DEBOUNCE_DELAY
 import com.practicum.playlistmaker.search.creator.CreatorSearch
-import com.practicum.playlistmaker.search.data.sharedpreferences.SharedPreferencesClientImpl
-import com.practicum.playlistmaker.search.data.sharedpreferences.SharedPreferencesClient
 
 const val HISTORY_TRACKS_SHARED_PREF = "history_tracks_shared_pref"
 

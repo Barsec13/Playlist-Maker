@@ -4,7 +4,7 @@ package com.practicum.playlistmaker.search.domain.models
 sealed class NetworkResponse() {
     class SuccessRequest() : NetworkResponse()
 
-    class ServerResponse() : NetworkResponse()
+    class ServerError() : NetworkResponse()
 
     class NoData() : NetworkResponse()
 
