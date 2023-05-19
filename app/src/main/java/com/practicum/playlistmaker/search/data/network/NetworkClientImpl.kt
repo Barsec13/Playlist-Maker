@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.search.data.network
 
-import com.practicum.playlistmaker.media.domain.model.Track
+import com.practicum.playlistmaker.player.domain.model.Track
+import com.practicum.playlistmaker.search.domain.models.NetworkError
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -11,9 +12,9 @@ class NetworkClientImpl(
     override fun loadTracks(
         searchText: String,
         onSuccess: (List<Track>) -> Unit,
-        noData: () -> Unit,
-        serverError: () -> Unit,
-        noInternet: () -> Unit,
+        noData: (NetworkError) -> Unit,
+        serverError: (NetworkError) -> Unit,
+        noInternet: (NetworkError) -> Unit,
     ) {
         api.searchTrack(searchText)
             .enqueue(object : Callback<TrackResponse> {
@@ -24,12 +25,12 @@ class NetworkClientImpl(
                     if (response.code() == 200) {
                         if (!response.body()?.results.isNullOrEmpty()) {
                             onSuccess.invoke(response.body()?.results!!)
-                        } else noData.invoke()
-                    } else serverError.invoke()
+                        } else noData.invoke(NetworkError.NoData())
+                    } else serverError.invoke(NetworkError.ServerError())
                 }
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    noInternet.invoke()
+                    noInternet.invoke(NetworkError.NoInternet())
                 }
             })
     }

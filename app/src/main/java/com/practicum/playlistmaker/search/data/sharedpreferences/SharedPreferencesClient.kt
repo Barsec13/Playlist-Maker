@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker.search.data.sharedpreferences
 
-import com.practicum.playlistmaker.media.domain.model.Track
+import com.practicum.playlistmaker.player.domain.model.Track
 
 interface SharedPreferencesClient {
     fun addTrack(track: Track, position: Int)

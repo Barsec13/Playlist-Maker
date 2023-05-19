@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:orientation="vertical"
-    tools:context=".main.MainActivity">
+    tools:context=".main.ui.activity.MainActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarSetting"
