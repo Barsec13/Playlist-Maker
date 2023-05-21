@@ -29,7 +29,6 @@ class SearchInteractorImpl(
         serverError: (NetworkError) -> Unit,
         noInternet: (NetworkError) -> Unit,
     ) {
-
         networkClient.loadTracks(searchText, onSuccess, noData, serverError, noInternet)
     }
 

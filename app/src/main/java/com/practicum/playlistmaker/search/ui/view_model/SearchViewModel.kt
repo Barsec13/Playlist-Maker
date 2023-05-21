@@ -55,7 +55,7 @@ class SearchViewModel(
         changedText: String,
         focus: Boolean) {
 
-        if (latestSearchText == changedText || !focus) return
+        if (latestSearchText == changedText || !focus || changedText.isNullOrEmpty()) return
 
         renderState(SearchStateInterface.changeTextSearch)
 
@@ -124,13 +124,14 @@ class SearchViewModel(
         visibleHistoryTrack()
     }
 
-    fun tracksHistoryFromJson(): List<Track>{
+    private fun tracksHistoryFromJson(): List<Track>{
         return searchInteractor.tracksHistoryFromJson()
     }
 
     fun onTrackClick(track: Track, position: Int) {
         if (clickDebounce()){
-        searchInteractor.addTrack(track, position)
-         }
+            searchInteractor.addTrack(track, position)
+            visibleHistoryTrack()
+        }
     }
 }

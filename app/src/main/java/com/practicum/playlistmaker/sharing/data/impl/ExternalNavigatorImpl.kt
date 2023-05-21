@@ -36,9 +36,10 @@ class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
     }
 
     override fun openEmail() {
-        context.startActivity(Intent(Intent.ACTION_SEND).apply {
+        context.startActivity(
+            Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse(emailData.mailto)
-            putExtra(Intent.EXTRA_EMAIL, arrayOf(emailData.emailDeveloper))
+            putExtra(Intent.EXTRA_EMAIL, emailData.emailDeveloper)
             putExtra(Intent.EXTRA_SUBJECT, subject)
             putExtra(Intent.EXTRA_TEXT, message)
             setFlags(FLAG_ACTIVITY_NEW_TASK)

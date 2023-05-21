@@ -54,9 +54,10 @@ class PlayerViewModel(
     fun observerTimerState(): LiveData<String> = timerLiveData
 
     override fun onCleared() {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+        pausePlayer()
         onViewDestroyed()
         onScreenDestroyed()
+        handler.removeCallbacksAndMessages(null)
     }
 
     fun playbackControl() {
@@ -83,11 +84,12 @@ class PlayerViewModel(
                 timerLiveData.value = getCurrentPosition()
                 handler.postDelayed(this, SEARCH_DEBOUNCE_DELAY)
             }
-        }, SEARCH_DEBOUNCE_DELAY)
+        }, SEARCH_REQUEST_TOKEN,SEARCH_DEBOUNCE_DELAY)
     }
 
     private fun pausePlayer() {
-        playerInteractor.pausePlayer()
+        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+        playerState = PlayerState.STATE_PAUSED
         playerStateLiveData.postValue(PlayerStateInterface.Pause)
     }
 
@@ -99,6 +101,7 @@ class PlayerViewModel(
     }
 
     private fun defaultPlayer() {
+        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
         playerState = PlayerState.STATE_DEFAULT
     }
 

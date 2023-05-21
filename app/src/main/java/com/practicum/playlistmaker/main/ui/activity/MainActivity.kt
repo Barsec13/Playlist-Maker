@@ -56,11 +56,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         buttonMedia.setOnClickListener() {
-            mainViewModel.onSettingsView()
+            mainViewModel.onMediaLibraryView()
         }
 
         buttonSettings.setOnClickListener() {
-            mainViewModel.onMediaLibraryView()
+            mainViewModel.onSettingsView()
         }
     }
 

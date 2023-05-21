@@ -45,7 +45,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun setListeners() {
         //Реализация переключения темы
-        themeSwitcher.setOnCheckedChangeListener { switcher, isChecked ->
+        themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
             viewModelSettings.clickThemeSwitcher(isChecked)
         }
 

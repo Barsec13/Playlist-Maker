@@ -1,7 +1,7 @@
 package com.practicum.playlistmaker.main.ui.view_model
 
+import SingleLiveEvent
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
@@ -18,7 +18,7 @@ class MainViewModel() : ViewModel() {
         }
     }
 
-    private val navigationViewStateLiveData = MutableLiveData<NavigationViewState>()
+    private val navigationViewStateLiveData = SingleLiveEvent<NavigationViewState>()
     fun observeNavigationViewState(): LiveData<NavigationViewState> = navigationViewStateLiveData
 
     fun onSearchView() {

@@ -32,8 +32,13 @@ class SettingsViewModel(
         }
     }
 
-    private var darkTheme = settingsInteractor.getThemeSettings().darkTheme
+    private var darkTheme = false
     private val themeSwitcherstateLiveData = MutableLiveData(darkTheme)
+
+    init {
+        darkTheme = settingsInteractor.getThemeSettings().darkTheme
+        themeSwitcherstateLiveData.value = darkTheme
+    }
 
     fun observeThemeSwitcherChecked(): LiveData<Boolean> = themeSwitcherstateLiveData
 
@@ -55,7 +60,7 @@ class SettingsViewModel(
         switchTheme(isChecked)
     }
 
-    fun switchTheme(darkThemeEnabled: Boolean) {
+    private fun switchTheme(darkThemeEnabled: Boolean) {
         darkTheme = darkThemeEnabled
 
         AppCompatDelegate.setDefaultNightMode(

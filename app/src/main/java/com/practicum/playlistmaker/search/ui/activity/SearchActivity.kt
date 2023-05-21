@@ -159,6 +159,7 @@ class SearchActivity : AppCompatActivity() {
         tracksHistoryAdapter.itemClickListener = { position, track ->
             searchViewModel.onTrackClick(track, position)
             CreatorSearch.getSearchNavigationRouter(this).sendToMedia(track)
+            searchViewModel.visibleHistoryTrack()
         }
     }
 
@@ -200,17 +201,16 @@ class SearchActivity : AppCompatActivity() {
         hideLoad()
         hideKeyboard()
         hideMessageError()
-        showHistoryList()
+        //showHistoryList()
         showTracks(emptyList())
-        hideClearIcon()
-        refreshHistory(tracks)
         clearTextSearch()
+        hideClearIcon()
         buttonClear.isEnabled = true
-
         if (tracks.isNotEmpty()) {
             showHistoryList()
         } else
             hideHistoryList()
+        refreshHistory(tracks)
     }
 
     private fun showMessageError(networkError: NetworkError) {
@@ -255,9 +255,9 @@ class SearchActivity : AppCompatActivity() {
         searchViewModel.loadTracks(textSearch())
     }
 
-    private fun refreshHistory(historyTracks: List<Track>) {
-        tracksHistoryAdapter.setTracks(
-            searchViewModel.tracksHistoryFromJson()
+    private fun refreshHistory(tracks: List<Track>) {
+        tracksHistoryAdapter.setTracks(tracks
+            /*searchViewModel.tracksHistoryFromJson()*/
         )
     }
 
