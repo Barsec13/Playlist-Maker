@@ -201,7 +201,6 @@ class SearchActivity : AppCompatActivity() {
         hideLoad()
         hideKeyboard()
         hideMessageError()
-        //showHistoryList()
         showTracks(emptyList())
         clearTextSearch()
         hideClearIcon()

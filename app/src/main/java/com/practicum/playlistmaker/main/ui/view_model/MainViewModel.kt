@@ -10,7 +10,6 @@ import com.practicum.playlistmaker.main.ui.model.NavigationViewState
 
 class MainViewModel() : ViewModel() {
     companion object {
-        //private val SEARCH_REQUEST_TOKEN = Any()
         fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 MainViewModel()
@@ -32,10 +31,4 @@ class MainViewModel() : ViewModel() {
     fun onSettingsView() {
         navigationViewStateLiveData.postValue(NavigationViewState.Settings)
     }
-
-//    override fun onCleared() {
-//        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-//    }
-
-
 }

@@ -131,7 +131,6 @@ class SearchViewModel(
     fun onTrackClick(track: Track, position: Int) {
         if (clickDebounce()){
             searchInteractor.addTrack(track, position)
-            visibleHistoryTrack()
         }
     }
 }
