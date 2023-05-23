@@ -5,7 +5,7 @@
     android:theme="@style/Theme.PlaylistMaker"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MediaActivity"
+    tools:context=".player.ui.activity.PlayerActivity"
     android:background="?attr/colorSecondary">
 
     <androidx.appcompat.widget.Toolbar
