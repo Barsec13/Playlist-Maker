@@ -13,7 +13,7 @@ import com.practicum.playlistmaker.search.ui.models.SearchStateInterface
 class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel() {
 
     companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
     }
 
@@ -47,7 +47,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
 
         val searchRunnable = Runnable { loadTracks(changedText) }
 
-        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
+        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY_MILLIS
 
         handler.postAtTime(
             searchRunnable,
@@ -65,7 +65,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
 
             val clickRunnable = Runnable { isClickAllowed = true }
 
-            val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
+            val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY_MILLIS
 
             handler.postAtTime(
                 clickRunnable,

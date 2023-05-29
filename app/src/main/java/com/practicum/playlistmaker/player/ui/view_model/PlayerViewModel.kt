@@ -24,7 +24,7 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
 
     companion object {
         private val SEARCH_REQUEST_TOKEN = Any()
-        private const val SEARCH_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 
     private val handler = Handler(Looper.getMainLooper())
@@ -72,10 +72,10 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
             object : Runnable {
                 override fun run() {
                     timerLiveData.value = getCurrentPosition()
-                    handler.postDelayed(this, SEARCH_DEBOUNCE_DELAY)
+                    handler.postDelayed(this, SEARCH_DEBOUNCE_DELAY_MILLIS)
                 }
             },
-            SEARCH_REQUEST_TOKEN, SEARCH_DEBOUNCE_DELAY
+            SEARCH_REQUEST_TOKEN, SEARCH_DEBOUNCE_DELAY_MILLIS
         )
     }
 
