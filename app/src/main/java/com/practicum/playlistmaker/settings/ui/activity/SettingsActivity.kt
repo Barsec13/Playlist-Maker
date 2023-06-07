@@ -3,27 +3,25 @@ package com.practicum.playlistmaker.settings.ui.activity
 import android.os.Bundle
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.settings.creator.CreatorSettings
+import com.practicum.playlistmaker.settings.ui.router.SettingsNavigationRouter
 import com.practicum.playlistmaker.settings.ui.view_model.SettingsViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var buttonShare: FrameLayout
     private lateinit var buttonSupport: FrameLayout
     private lateinit var buttonUserAgreement: FrameLayout
-    private lateinit var viewModelSettings: SettingsViewModel
     private lateinit var themeSwitcher: SwitchMaterial
     private lateinit var buttonArrowBackSettings: androidx.appcompat.widget.Toolbar
+
+    private val viewModelSettings: SettingsViewModel by viewModel()
+    private val settingsNavigationRouter = SettingsNavigationRouter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-
-        viewModelSettings = ViewModelProvider(
-            this, SettingsViewModel.getSettingsViewModelFactory()
-        )[SettingsViewModel::class.java]
 
         initViews()
 
@@ -68,7 +66,7 @@ class SettingsActivity : AppCompatActivity() {
         //Обработка нажатия на ToolBar "<-" и переход
         // на главный экран через закрытие экрана "Настройки"
         buttonArrowBackSettings.setOnClickListener() {
-            CreatorSettings.getSettingsNavigationRouter(this).backView()
+            settingsNavigationRouter.backView()
         }
     }
 }
