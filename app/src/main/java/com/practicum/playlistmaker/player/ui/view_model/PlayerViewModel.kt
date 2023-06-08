@@ -1,23 +1,15 @@
 package com.practicum.playlistmaker.player.ui.view_model
 
-import android.app.Application
 import android.os.Handler
 import android.os.Looper
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.practicum.playlistmaker.player.creator.CreatorPlayer
+import androidx.lifecycle.ViewModel
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.model.PlayerState
 import com.practicum.playlistmaker.player.ui.models.PlayerStateInterface
 
-class PlayerViewModel(
-    private var application: Application,
-    private var playerInteractor: PlayerInteractor,
-) : AndroidViewModel(application) {
+class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewModel() {
 
     init {
         playerInteractor.subscribeOnPlayer { state ->
@@ -32,17 +24,7 @@ class PlayerViewModel(
 
     companion object {
         private val SEARCH_REQUEST_TOKEN = Any()
-        private val SEARCH_DEBOUNCE_DELAY = 300L
-        fun getViewModelFactory(previewUrl: String?): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application =
-                    this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application
-                PlayerViewModel(
-                    application = application,
-                    playerInteractor = CreatorPlayer.provideMediaInteractor(previewUrl = previewUrl)
-                )
-            }
-        }
+        private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 
     private val handler = Handler(Looper.getMainLooper())
@@ -61,11 +43,17 @@ class PlayerViewModel(
     }
 
     fun playbackControl() {
+
         when (playerState) {
-            PlayerState.STATE_PLAYING -> playerInteractor.pausePlayer()
+            PlayerState.STATE_PLAYING -> {
+                handler.removeCallbacksAndMessages(null)
+                playerInteractor.pausePlayer()
+            }
+
             PlayerState.STATE_PREPARED,
             PlayerState.STATE_PAUSED,
             -> playerInteractor.startPlayer()
+
             PlayerState.STATE_DEFAULT -> defaultPlayer()
         }
     }
@@ -78,35 +66,41 @@ class PlayerViewModel(
         playerState = PlayerState.STATE_PLAYING
         playerStateLiveData.postValue(PlayerStateInterface.Play)
 
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-        handler.postDelayed(object : Runnable {
-            override fun run() {
-                timerLiveData.value = getCurrentPosition()
-                handler.postDelayed(this, SEARCH_DEBOUNCE_DELAY)
-            }
-        }, SEARCH_REQUEST_TOKEN,SEARCH_DEBOUNCE_DELAY)
+        handler.removeCallbacksAndMessages(null)
+
+        handler.postDelayed(
+            object : Runnable {
+                override fun run() {
+                    timerLiveData.value = getCurrentPosition()
+                    handler.postDelayed(this, SEARCH_DEBOUNCE_DELAY_MILLIS)
+                }
+            },
+            SEARCH_REQUEST_TOKEN, SEARCH_DEBOUNCE_DELAY_MILLIS
+        )
     }
 
     private fun pausePlayer() {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
         playerState = PlayerState.STATE_PAUSED
+        handler.removeCallbacksAndMessages(null)
         playerStateLiveData.postValue(PlayerStateInterface.Pause)
     }
 
 
-    fun startPreparePlayer() {
-        playerInteractor.preparePlayer()
+    fun startPreparePlayer(previewUrl: String?) {
+        playerInteractor.preparePlayer(previewUrl)
         playerState = PlayerState.STATE_PREPARED
         playerStateLiveData.postValue(PlayerStateInterface.Prepare)
     }
 
     private fun defaultPlayer() {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+        handler.removeCallbacksAndMessages(null)
         playerState = PlayerState.STATE_DEFAULT
     }
 
     private fun preparePlayer() {
         playerState = PlayerState.STATE_PREPARED
+        playerStateLiveData.postValue(PlayerStateInterface.Prepare)
+        handler.removeCallbacksAndMessages(null)
     }
 
     private fun onScreenDestroyed() {

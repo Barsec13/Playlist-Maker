@@ -1,38 +1,20 @@
 package com.practicum.playlistmaker.search.ui.view_model
 
-import android.app.Application
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.lifecycle.ViewModel
 import com.practicum.playlistmaker.player.domain.model.Track
-import com.practicum.playlistmaker.search.creator.CreatorSearch
 import com.practicum.playlistmaker.search.domain.api.SearchInteractor
 import com.practicum.playlistmaker.search.ui.models.SearchStateInterface
 
-class SearchViewModel(
-    private val application: Application,
-    private val searchInteractor: SearchInteractor,
-): AndroidViewModel(application) {
+class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel() {
 
     companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application =
-                    this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application
-                SearchViewModel(
-                    application = application,
-                    searchInteractor = CreatorSearch.provideSearchInteractor(application),
-                )
-            }
-        }
     }
 
     private val handler = Handler(Looper.getMainLooper())
@@ -65,7 +47,7 @@ class SearchViewModel(
 
         val searchRunnable = Runnable { loadTracks(changedText) }
 
-        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
+        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY_MILLIS
 
         handler.postAtTime(
             searchRunnable,
@@ -83,7 +65,7 @@ class SearchViewModel(
 
             val clickRunnable = Runnable { isClickAllowed = true }
 
-            val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
+            val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY_MILLIS
 
             handler.postAtTime(
                 clickRunnable,

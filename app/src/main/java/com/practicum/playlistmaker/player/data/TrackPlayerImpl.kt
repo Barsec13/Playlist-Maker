@@ -5,7 +5,7 @@ import com.practicum.playlistmaker.player.domain.api.PlayerStateListener
 import com.practicum.playlistmaker.player.domain.api.TrackPlayer
 import com.practicum.playlistmaker.player.domain.model.PlayerState
 
-class TrackPlayerImpl(private val previewUrl: String?) : TrackPlayer {
+class TrackPlayerImpl() : TrackPlayer {
 
     private var mediaPlayer = MediaPlayer()
     override var listener: PlayerStateListener? = null
@@ -14,7 +14,7 @@ class TrackPlayerImpl(private val previewUrl: String?) : TrackPlayer {
         listener?.onStateChanged(PlayerState.STATE_DEFAULT)
     }
 
-    override fun preparePlayer() {
+    override fun preparePlayer(previewUrl: String?) {
         if (previewUrl.isNullOrEmpty()) return
 
         mediaPlayer.setDataSource(previewUrl)

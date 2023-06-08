@@ -14,18 +14,16 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.player.domain.model.Track
-import com.practicum.playlistmaker.search.creator.CreatorSearch
 import com.practicum.playlistmaker.search.domain.models.NetworkError
 import com.practicum.playlistmaker.search.ui.adapter.TrackAdapter
 import com.practicum.playlistmaker.search.ui.adapter.TrackHistoryAdapter
 import com.practicum.playlistmaker.search.ui.models.SearchStateInterface
+import com.practicum.playlistmaker.search.ui.router.SearchNavigationRouter
 import com.practicum.playlistmaker.search.ui.view_model.SearchViewModel
-
-const val HISTORY_TRACKS_SHARED_PREF = "history_tracks_shared_pref"
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
@@ -44,7 +42,8 @@ class SearchActivity : AppCompatActivity() {
     lateinit var recyclerView: RecyclerView
     lateinit var recyclerViewHistory: RecyclerView
 
-    private lateinit var searchViewModel: SearchViewModel
+    private val searchViewModel: SearchViewModel by viewModel()
+    private val searchNavigationRouter = SearchNavigationRouter(this)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,11 +55,6 @@ class SearchActivity : AppCompatActivity() {
 
         //RecyclerView
         initAdapter()
-
-        searchViewModel = ViewModelProvider(
-            this,
-            SearchViewModel.getViewModelFactory()
-        )[SearchViewModel::class.java]
 
         searchViewModel.observeState().observe(this) {
             render(it)
@@ -106,7 +100,7 @@ class SearchActivity : AppCompatActivity() {
         //Обработка нажатия на ToolBar "<-" и переход
         // на главный экран через закрытие экрана "Настройки"
         buttonArrowBackSettings.setOnClickListener() {
-            CreatorSearch.getSearchNavigationRouter(this).backView()
+            searchNavigationRouter.backView()
         }
 
         //Очистка истории поиска
@@ -152,13 +146,13 @@ class SearchActivity : AppCompatActivity() {
         //Обработать нажатие на View трека в поиске
         tracksAdapter.itemClickListener = { position, track ->
             searchViewModel.onTrackClick(track, position)
-            CreatorSearch.getSearchNavigationRouter(this).sendToMedia(track)
+            searchNavigationRouter.sendToMedia(track)
         }
 
         //Обработать нажатие на View трека в истории поиска
         tracksHistoryAdapter.itemClickListener = { position, track ->
             searchViewModel.onTrackClick(track, position)
-            CreatorSearch.getSearchNavigationRouter(this).sendToMedia(track)
+            searchNavigationRouter.sendToMedia(track)
             searchViewModel.visibleHistoryTrack()
         }
     }
@@ -255,9 +249,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun refreshHistory(tracks: List<Track>) {
-        tracksHistoryAdapter.setTracks(tracks
-            /*searchViewModel.tracksHistoryFromJson()*/
-        )
+        tracksHistoryAdapter.setTracks(tracks)
     }
 
     private fun clearTextSearch() {
