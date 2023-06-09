@@ -20,6 +20,8 @@
     <string name="communications_problem1">Проблемы со связью</string>
     <string name="communications_problem2">Загрузка не удалась. Проверьте подключение к интернету</string>
     <string name="refresh_button">Обновить</string>
+    <string name="clear_history">Очистить историю</string>
+    <string name="you_search">Вы искали</string>
 
     <string name="artwork">Обложка альбома</string>
     <string name="track_time">Длительность</string>
@@ -33,5 +35,6 @@
 
     <string name="nothing_playlist">Вы не создали ни одного плейлиста</string>
     <string name="new_playlist">Новый плейлист</string>
-
+    <string name="favorite_track">Избранные треки</string>
+    <string name="playlist">Плейлисты</string>
 </resources>

@@ -83,7 +83,8 @@ class PlayerActivity : AppCompatActivity() {
     private fun prepare(){
         buttonPlay.isEnabled = true
         buttonPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
-        duration.text = R.string.duration_start.toString()
+        duration.text = resources.getString(R.string.duration_start)
+            //R.string.duration_start.toString()
     }
 
     private fun play(){
@@ -132,7 +133,7 @@ class PlayerActivity : AppCompatActivity() {
         releaseDate.text = track.releaseDate.substring(0..3)
         primaryGenreName.text = track.primaryGenreName
         country.text = track.country
-        duration.text = R.string.duration_start.toString()
+        duration.text = resources.getString(R.string.duration_start)
 
         val roundingRadius = this.resources.getDimensionPixelSize(R.dimen.roundingRadiusPlayer)
         Glide.with(this)

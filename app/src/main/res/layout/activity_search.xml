@@ -139,7 +139,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="24dp"
-                android:text="Вы искали"
+                android:text="@string/you_search"
                 android:gravity="center"
                 android:textSize="19sp"
                 android:textColor="?attr/colorOnSecondary"
@@ -157,7 +157,7 @@
             <Button
                 android:id="@+id/button_clear_history"
                 style="@style/searchButtonRefresh"
-                android:text="Очистить историю"
+                android:text="@string/clear_history"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="24dp"/>

@@ -30,21 +30,4 @@
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-
-    <LinearLayout
-        android:id="@+id/placeholderNothingWasFound"
-        style="@style/searchPlaceholder"
-        android:visibility="visible">
-
-        <ImageView
-            style="@style/searchImage"
-            android:visibility="visible"
-            android:src="@drawable/ic_nothingfound"/>
-
-        <TextView
-            style="@style/searchTextview"
-            android:visibility="visible"
-            android:text="@string/nothing_found"/>
-    </LinearLayout>
-
 </LinearLayout>

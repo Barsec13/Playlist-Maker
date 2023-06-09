@@ -8,7 +8,7 @@
     android:background="?attr/colorSecondary">
 
     <Button
-        android:id="@+id/button_clear_history"
+        android:id="@+id/button_new_playlist"
         style="@style/searchButtonRefresh"
         android:text="@string/new_playlist"
         android:layout_width="wrap_content"
