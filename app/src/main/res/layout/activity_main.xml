@@ -31,7 +31,7 @@
     <Button
         android:id="@+id/buttonMedia"
         app:icon="@drawable/ic_media"
-        android:text="@string/media"
+        android:text="@string/media_library"
         style="@style/ButtonStyleMain"/>
 
     <Button
