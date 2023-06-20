@@ -1,5 +1,7 @@
 package com.practicum.playlistmaker.player.domain.api
 
+import com.practicum.playlistmaker.player.domain.model.Track
+
 interface PlayerInteractor {
 
     fun preparePlayer(previewUrl: String?)
@@ -9,4 +11,5 @@ interface PlayerInteractor {
     fun unSubscribeOnPlayer()
     fun releasePlayer()
     fun getCurrentPosition(): String
+    fun getTrackHistory(): List<Track>
 }

@@ -13,7 +13,7 @@
         <item name="iconPadding">@dimen/icon_for_text</item>
         <item name="iconTint">?attr/colorPrimaryVariant</item>
         <item name="cornerRadius">@dimen/button_radius</item>
-        <item name="android:layout_marginTop">@dimen/margin_main</item>
+        <item name="android:layout_marginTop">@dimen/margin_16</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
 
@@ -57,10 +57,9 @@
         <item name="android:layout_marginBottom">@dimen/margin_button</item>
         <item name="android:background">?attr/colorSecondary</item>
         <item name="titleTextAppearance">@style/textPanelHeader</item>
-        <item name="navigationIcon">@drawable/ic_arrow_back</item>
         <item name="contentInsetStart">0dp</item>
         <item name="contentInsetStartWithNavigation">0dp</item>
-        <item name="titleMarginStart">0dp</item>
+        <item name="titleMarginStart">@dimen/margin_16</item>
     </style>
 
     <style name="textTrackView">
@@ -181,5 +180,10 @@
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="menu_text">
+        <item name="android:fontFamily">@font/ys_text_regular</item>
+        <item name="android:textSize">12sp</item>
     </style>
 </resources>

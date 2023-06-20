@@ -1,4 +1,4 @@
-
+package com.practicum.playlistmaker.root.ui
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer

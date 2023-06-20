@@ -4,4 +4,5 @@
     <attr name="text_search" format="reference"/>
     <attr name="edit_text" format="reference"/>
     <attr name="button_media" format="reference"/>
+    <attr name="item_menu" format="reference"/>
 </resources>

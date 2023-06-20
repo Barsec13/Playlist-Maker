@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:theme="@style/Theme.PlaylistMaker"
@@ -8,12 +7,12 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:orientation="vertical"
-    tools:context=".main.ui.activity.MainActivity">
+    tools:context="com.practicum.playlistmaker.search.ui.fragment.SearchFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarSetting"
         app:title="@string/search"
-        style="@style/panelHeaderToolbar"/>
+        style="@style/panelHeaderToolbar" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"

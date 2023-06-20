@@ -2,6 +2,8 @@ package com.practicum.playlistmaker.di
 
 import android.content.Context
 import com.google.gson.Gson
+import com.practicum.playlistmaker.player.data.sharedpreferences.SharedPreferencesPlayerClient
+import com.practicum.playlistmaker.player.data.sharedpreferences.SharedPreferencesPlayerClientImpl
 import com.practicum.playlistmaker.search.data.network.NetworkClient
 import com.practicum.playlistmaker.search.data.network.NetworkClientImpl
 import com.practicum.playlistmaker.search.data.network.iTunesSearchAPI
@@ -46,4 +48,11 @@ val dataModule = module {
     }
 
     single<ExternalNavigator> { ExternalNavigatorImpl(androidContext()) }
+
+    single<SharedPreferencesPlayerClient> {
+        SharedPreferencesPlayerClientImpl(
+            sharedPref = get(),
+            gson = get()
+        )
+    }
 }

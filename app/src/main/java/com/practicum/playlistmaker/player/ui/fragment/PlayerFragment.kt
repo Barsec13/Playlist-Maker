@@ -1,22 +1,29 @@
-package com.practicum.playlistmaker.player.ui.activity
+package com.practicum.playlistmaker.player.ui.fragment
 
+import android.os.Build
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.annotation.RequiresApi
+import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.TimeUtils.formatTrackDuraction
+import com.practicum.playlistmaker.TimeUtils
+import com.practicum.playlistmaker.databinding.FragmentPlayerBinding
 import com.practicum.playlistmaker.player.domain.model.Track
 import com.practicum.playlistmaker.player.ui.models.PlayerStateInterface
-import com.practicum.playlistmaker.player.ui.router.PlayerRouter
 import com.practicum.playlistmaker.player.ui.view_model.PlayerViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
-class PlayerActivity : AppCompatActivity() {
-
+class PlayerFragment : Fragment() {
     //Переменные
     lateinit var buttonArrowBackSettings: androidx.appcompat.widget.Toolbar
     lateinit var track: Track
@@ -31,32 +38,53 @@ class PlayerActivity : AppCompatActivity() {
     lateinit var duration: TextView
     lateinit var buttonPlay: FloatingActionButton
 
+    companion object {
+        private const val SEND_TRACK_ID = "send_track_id"
+
+        fun createArgs(sendTrackId: Int): Bundle {
+            return bundleOf(SEND_TRACK_ID to sendTrackId)
+        }
+    }
+
     private var previewUrl: String? = null
 
-    private val playerViewModel: PlayerViewModel by viewModel()
-    private lateinit var playerRouter: PlayerRouter
+    private val playerViewModel: PlayerViewModel by viewModel {
+        parametersOf(requireArguments().getInt(SEND_TRACK_ID))
+    }
+    private lateinit var binding: FragmentPlayerBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_media)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        binding = FragmentPlayerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         //Присвоить значение переменным
         initViews()
 
-        playerRouter = PlayerRouter(this)
+        playerViewModel.getTrackHistory()
 
-        playerViewModel.observePlayerState().observe(this){
+        playerViewModel.observeTrackHistoryState().observe(viewLifecycleOwner) { trackHistory ->
+            getInfoTrack(trackHistory)
+        }
+
+        playerViewModel.observePlayerState().observe(viewLifecycleOwner) {
             render(it)
         }
 
-        playerViewModel.observerTimerState().observe(this){ time ->
+        playerViewModel.observerTimerState().observe(viewLifecycleOwner) { time ->
             duration.text = time
         }
 
         //Listener
         setListeners()
-        //Отображение данных трека
-        getInfoTrack()
     }
 
     override fun onPause() {
@@ -68,47 +96,47 @@ class PlayerActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    fun getInfoTrack() {
-        showDataTrack(playerRouter.getToMedia())
+    fun getInfoTrack(track: Track) {
+        showDataTrack(track)
     }
 
-    private fun render(state: PlayerStateInterface){
-        when(state){
+    private fun render(state: PlayerStateInterface) {
+        when (state) {
             is PlayerStateInterface.Play -> play()
             is PlayerStateInterface.Pause -> pause()
             is PlayerStateInterface.Prepare -> prepare()
         }
     }
 
-    private fun prepare(){
+    private fun prepare() {
         buttonPlay.isEnabled = true
         buttonPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
         duration.text = resources.getString(R.string.duration_start)
-            //R.string.duration_start.toString()
+        //R.string.duration_start.toString()
     }
 
-    private fun play(){
+    private fun play() {
         buttonPlay.setImageResource(R.drawable.ic_baseline_pause_24)
     }
 
-    private fun pause(){
+    private fun pause() {
         buttonPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
     }
 
     //Инициализация переменных
     private fun initViews() {
         //Кнопка "<-" из окна "Настройки"
-        buttonArrowBackSettings = findViewById(R.id.toolbarSetting)
-        artworkUrl100 = findViewById(R.id.artwork_url_100)
-        trackName = findViewById(R.id.trackName)
-        artistName = findViewById(R.id.artistName)
-        trackTime = findViewById(R.id.track_time_data)
-        collectionName = findViewById(R.id.collection_name_data)
-        releaseDate = findViewById(R.id.release_date_data)
-        primaryGenreName = findViewById(R.id.primary_genre_name_data)
-        country = findViewById(R.id.country_data)
-        duration = findViewById(R.id.duration)
-        buttonPlay = findViewById(R.id.play_track)
+        buttonArrowBackSettings = binding.toolbarSetting
+        artworkUrl100 = binding.artworkUrl100
+        trackName = binding.trackName
+        artistName = binding.artistName
+        trackTime = binding.trackTimeData
+        collectionName = binding.collectionNameData
+        releaseDate = binding.releaseDateData
+        primaryGenreName = binding.primaryGenreNameData
+        country = binding.countryData
+        duration = binding.duration
+        buttonPlay = binding.playTrack
     }
 
     //Настроить Listeners
@@ -116,7 +144,7 @@ class PlayerActivity : AppCompatActivity() {
         //Обработка нажатия на ToolBar "<-" и переход
         // на главный экран через закрытие экрана "Настройки"
         buttonArrowBackSettings.setOnClickListener() {
-            playerRouter.backView()
+            findNavController().navigateUp()
         }
         buttonPlay.setOnClickListener() {
             playerViewModel.playbackControl()
@@ -128,7 +156,7 @@ class PlayerActivity : AppCompatActivity() {
         previewUrl = track.previewUrl
         trackName.text = track.trackName
         artistName.text = track.artistName
-        trackTime.text = formatTrackDuraction(track.trackTimeMillis.toInt())
+        trackTime.text = TimeUtils.formatTrackDuraction(track.trackTimeMillis.toInt())
         collectionName.text = track.collectionName
         releaseDate.text = track.releaseDate.substring(0..3)
         primaryGenreName.text = track.primaryGenreName

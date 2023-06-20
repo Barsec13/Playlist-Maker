@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:theme="@style/Theme.PlaylistMaker"
@@ -8,13 +7,13 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:orientation="vertical"
-    tools:context=".media_library.ui.activity.MediaLibraryActivity">
+    tools:context="com.practicum.playlistmaker.media_library.ui.fragment.MediaLibraryFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarMediaLibrary"
         app:title="@string/media_library"
         style="@style/panelHeaderToolbar"
-        android:layout_marginBottom="0dp"/>
+        android:layout_marginBottom="0dp" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
