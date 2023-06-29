@@ -1,7 +1,7 @@
 package com.practicum.playlistmaker
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 object TimeUtils {
     fun formatTrackDuraction(time: Int): String {

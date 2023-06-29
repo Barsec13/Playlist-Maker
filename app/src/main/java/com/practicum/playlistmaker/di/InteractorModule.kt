@@ -12,7 +12,10 @@ import org.koin.dsl.module
 
 val interactorModule = module {
     factory<PlayerInteractor> {
-        PlayerInteractorImpl(trackPlayer = get())
+        PlayerInteractorImpl(
+            trackPlayer = get(),
+            sharedPreferencesPlayerClientImpl = get()
+        )
     }
 
     single<SearchInteractor> {

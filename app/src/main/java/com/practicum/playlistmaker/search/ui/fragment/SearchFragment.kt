@@ -1,10 +1,12 @@
-package com.practicum.playlistmaker.search.ui.activity
+package com.practicum.playlistmaker.search.ui.fragment
 
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -12,20 +14,22 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.player.domain.model.Track
+import com.practicum.playlistmaker.player.ui.fragment.PlayerFragment
 import com.practicum.playlistmaker.search.domain.models.NetworkError
 import com.practicum.playlistmaker.search.ui.adapter.TrackAdapter
 import com.practicum.playlistmaker.search.ui.adapter.TrackHistoryAdapter
 import com.practicum.playlistmaker.search.ui.models.SearchStateInterface
-import com.practicum.playlistmaker.search.ui.router.SearchNavigationRouter
 import com.practicum.playlistmaker.search.ui.view_model.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
 
     //Переменные для работы с UI
     lateinit var searchEditText: EditText
@@ -43,12 +47,19 @@ class SearchActivity : AppCompatActivity() {
     lateinit var recyclerViewHistory: RecyclerView
 
     private val searchViewModel: SearchViewModel by viewModel()
-    private val searchNavigationRouter = SearchNavigationRouter(this)
+    private lateinit var binding: FragmentSearchBinding
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         //Присвоить значение переменным
         initViews()
@@ -56,7 +67,7 @@ class SearchActivity : AppCompatActivity() {
         //RecyclerView
         initAdapter()
 
-        searchViewModel.observeState().observe(this) {
+        searchViewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
 
@@ -68,17 +79,17 @@ class SearchActivity : AppCompatActivity() {
 
     //Присвоить значение переменным
     private fun initViews() {
-        searchClearIcon = findViewById(R.id.searchClearIcon)
-        searchEditText = findViewById(R.id.searchEditText)
-        placeholderNothingWasFound = findViewById(R.id.placeholderNothingWasFound)
-        placeholderCommunicationsProblem = findViewById(R.id.placeholderCommunicationsProblem)
-        buttonReturn = findViewById(R.id.button_return)
-        historyList = findViewById(R.id.history_list)
-        buttonClear = findViewById(R.id.button_clear_history)
-        progressBar = findViewById(R.id.progressBar)
-        buttonArrowBackSettings = findViewById(R.id.toolbarSetting)
-        recyclerView = findViewById(R.id.recyclerView)
-        recyclerViewHistory = findViewById(R.id.recyclerViewHistory)
+        searchClearIcon = binding.searchClearIcon
+        searchEditText = binding.searchEditText
+        placeholderNothingWasFound = binding.placeholderNothingWasFound
+        placeholderCommunicationsProblem = binding.placeholderCommunicationsProblem
+        buttonReturn = binding.buttonReturn
+        historyList = binding.historyList
+        buttonClear = binding.buttonClearHistory
+        progressBar = binding.progressBar
+        buttonArrowBackSettings = binding.toolbarSetting
+        recyclerView = binding.recyclerView
+        recyclerViewHistory = binding.recyclerViewHistory
         searchEditText.setText("")
     }
 
@@ -97,12 +108,6 @@ class SearchActivity : AppCompatActivity() {
 
     //Настроить Listeners
     private fun setListeners() {
-        //Обработка нажатия на ToolBar "<-" и переход
-        // на главный экран через закрытие экрана "Настройки"
-        buttonArrowBackSettings.setOnClickListener() {
-            searchNavigationRouter.backView()
-        }
-
         //Очистка истории поиска
         buttonClear.setOnClickListener() {
             searchViewModel.clickButtonClearHistory()
@@ -146,13 +151,13 @@ class SearchActivity : AppCompatActivity() {
         //Обработать нажатие на View трека в поиске
         tracksAdapter.itemClickListener = { position, track ->
             searchViewModel.onTrackClick(track, position)
-            searchNavigationRouter.sendToMedia(track)
+            sendToPlayer(track)
         }
 
         //Обработать нажатие на View трека в истории поиска
         tracksHistoryAdapter.itemClickListener = { position, track ->
             searchViewModel.onTrackClick(track, position)
-            searchNavigationRouter.sendToMedia(track)
+            sendToPlayer(track)
             searchViewModel.visibleHistoryTrack()
         }
     }
@@ -239,7 +244,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun hideKeyboard() {
         val inputMethodManager =
-            getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         //Скрыть клавиатуру
         inputMethodManager?.hideSoftInputFromWindow(searchEditText.windowToken, 0)
     }
@@ -284,5 +289,12 @@ class SearchActivity : AppCompatActivity() {
 
     private fun showClearIcon() {
         searchClearIcon.visibility = View.VISIBLE
+    }
+
+    private fun sendToPlayer(track: Track) {
+        findNavController().navigate(
+            R.id.action_searchFragment_to_playerFragment,
+            PlayerFragment.createArgs(track.trackId)
+        )
     }
 }

@@ -5,7 +5,7 @@
     android:theme="@style/Theme.PlaylistMaker"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".player.ui.activity.PlayerActivity"
+    tools:context="com.practicum.playlistmaker.player.ui.fragment.PlayerFragment"
     android:background="?attr/colorSecondary">
 
     <androidx.appcompat.widget.Toolbar
@@ -14,7 +14,10 @@
         android:background="?attr/colorSecondary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/artwork_url_100"/>
+        app:layout_constraintBottom_toTopOf="@id/artwork_url_100"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        />
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/left_guideline"

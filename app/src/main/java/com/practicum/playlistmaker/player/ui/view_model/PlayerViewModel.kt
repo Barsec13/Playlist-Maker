@@ -7,9 +7,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.model.PlayerState
+import com.practicum.playlistmaker.player.domain.model.Track
 import com.practicum.playlistmaker.player.ui.models.PlayerStateInterface
 
-class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewModel() {
+class PlayerViewModel(
+    private val playerInteractor: PlayerInteractor,
+    private val trackId: Int,
+) : ViewModel() {
 
     init {
         playerInteractor.subscribeOnPlayer { state ->
@@ -32,8 +36,10 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
 
     private val playerStateLiveData = MutableLiveData<PlayerStateInterface>()
     private val timerLiveData = MutableLiveData<String>()
+    private val trackHistoryStateLiveData = MutableLiveData<Track>()
     fun observePlayerState(): LiveData<PlayerStateInterface> = playerStateLiveData
     fun observerTimerState(): LiveData<String> = timerLiveData
+    fun observeTrackHistoryState(): LiveData<Track> = trackHistoryStateLiveData
 
     override fun onCleared() {
         pausePlayer()
@@ -113,5 +119,14 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
 
     private fun getCurrentPosition(): String {
         return playerInteractor.getCurrentPosition()
+    }
+
+    fun getTrackHistory() {
+        val sendTrack = playerInteractor.getTrackHistory().find { it.trackId == trackId } ?: return
+        trackState(sendTrack)
+    }
+
+    private fun trackState(track: Track) {
+        trackHistoryStateLiveData.postValue(track)
     }
 }

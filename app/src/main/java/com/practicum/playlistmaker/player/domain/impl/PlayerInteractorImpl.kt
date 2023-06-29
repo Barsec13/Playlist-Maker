@@ -1,12 +1,16 @@
 package com.practicum.playlistmaker.player.domain.impl
 
 import com.practicum.playlistmaker.TimeUtils.formatTrackDuraction
+import com.practicum.playlistmaker.player.data.sharedpreferences.SharedPreferencesPlayerClient
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.api.PlayerStateListener
 import com.practicum.playlistmaker.player.domain.api.TrackPlayer
+import com.practicum.playlistmaker.player.domain.model.Track
 
 class PlayerInteractorImpl(
-    private val trackPlayer: TrackPlayer) : PlayerInteractor {
+    private val trackPlayer: TrackPlayer,
+    private val sharedPreferencesPlayerClientImpl: SharedPreferencesPlayerClient,
+) : PlayerInteractor {
     override fun preparePlayer(previewUrl: String?) {
         trackPlayer.preparePlayer(previewUrl)
     }
@@ -33,5 +37,9 @@ class PlayerInteractorImpl(
 
     override fun getCurrentPosition(): String {
         return formatTrackDuraction(trackPlayer.getCurrentPosition())
+    }
+
+    override fun getTrackHistory(): List<Track> {
+        return sharedPreferencesPlayerClientImpl.tracksHistoryFromJson()
     }
 }
