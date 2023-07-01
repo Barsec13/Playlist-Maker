@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker.player.domain.impl
 
-import com.practicum.playlistmaker.TimeUtils.formatTrackDuraction
+import com.practicum.playlistmaker.util.TimeUtils.formatTrackDuraction
 import com.practicum.playlistmaker.player.data.sharedpreferences.SharedPreferencesPlayerClient
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.api.PlayerStateListener

@@ -21,7 +21,7 @@ val interactorModule = module {
     single<SearchInteractor> {
         SearchInteractorImpl(
             sharedPreferencesSearchClient = get(),
-            networkClient = get()
+            searchRepository = get()
         )
     }
 

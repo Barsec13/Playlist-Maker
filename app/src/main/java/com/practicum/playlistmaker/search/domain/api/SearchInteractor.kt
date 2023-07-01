@@ -1,7 +1,8 @@
 package com.practicum.playlistmaker.search.domain.api
 
 import com.practicum.playlistmaker.player.domain.model.Track
-import com.practicum.playlistmaker.search.domain.models.NetworkError
+import com.practicum.playlistmaker.search.data.network.ResultLoadTracks
+import kotlinx.coroutines.flow.Flow
 
 interface SearchInteractor {
     fun clearHistory()
@@ -12,9 +13,5 @@ interface SearchInteractor {
 
     fun loadTracks(
         searchText: String,
-        onSuccess: (List<Track>) -> Unit,
-        noData: (NetworkError) -> Unit,
-        serverError: (NetworkError) -> Unit,
-        noInternet: (NetworkError) -> Unit,
-    )
+    ): Flow<ResultLoadTracks>
 }
