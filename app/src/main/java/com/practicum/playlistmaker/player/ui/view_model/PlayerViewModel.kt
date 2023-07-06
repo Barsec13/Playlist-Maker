@@ -29,12 +29,10 @@ class PlayerViewModel(
     }
 
     companion object {
-       // private val SEARCH_REQUEST_TOKEN = Any()
         private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 300L
     }
 
     private var timerJob: Job? = null
-    //private val handler = Handler(Looper.getMainLooper())
     var playerState = PlayerState.STATE_DEFAULT
 
     private val playerStateLiveData = MutableLiveData<PlayerStateInterface>()
@@ -48,7 +46,6 @@ class PlayerViewModel(
         pausePlayer()
         onViewDestroyed()
         onScreenDestroyed()
-        //handler.removeCallbacksAndMessages(null)
     }
 
     fun playbackControl() {
@@ -76,24 +73,12 @@ class PlayerViewModel(
         playerStateLiveData.postValue(PlayerStateInterface.Play)
 
         startTimer()
-
-//        handler.removeCallbacksAndMessages(null)
-//
-//        handler.postDelayed(
-//            object : Runnable {
-//                override fun run() {
-//                    timerLiveData.value = getCurrentPosition()
-//                    handler.postDelayed(this, SEARCH_DEBOUNCE_DELAY_MILLIS)
-//                }
-//            },
-//            SEARCH_REQUEST_TOKEN, SEARCH_DEBOUNCE_DELAY_MILLIS
-//        )
     }
 
     private fun pausePlayer() {
         playerState = PlayerState.STATE_PAUSED
-        //handler.removeCallbacksAndMessages(null)
         playerStateLiveData.postValue(PlayerStateInterface.Pause)
+        timerJob?.cancel()
     }
 
 
@@ -104,14 +89,13 @@ class PlayerViewModel(
     }
 
     private fun defaultPlayer() {
-        //handler.removeCallbacksAndMessages(null)
+        pausePlayer()
         playerState = PlayerState.STATE_DEFAULT
     }
 
     private fun preparePlayer() {
         playerState = PlayerState.STATE_PREPARED
         playerStateLiveData.postValue(PlayerStateInterface.Prepare)
-        //handler.removeCallbacksAndMessages(null)
     }
 
     private fun onScreenDestroyed() {

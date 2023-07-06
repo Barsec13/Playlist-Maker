@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.search.data.network
 
+import com.practicum.playlistmaker.search.domain.models.ResultLoadTracks
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

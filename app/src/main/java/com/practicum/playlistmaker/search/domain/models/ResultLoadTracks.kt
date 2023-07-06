@@ -1,9 +1,9 @@
-package com.practicum.playlistmaker.search.data.network
+package com.practicum.playlistmaker.search.domain.models
 
 import com.practicum.playlistmaker.player.domain.model.Track
 
-sealed class ResultLoadTracks(val data: List<Track>? = null){
-    class OnSuccess(data: List<Track>): ResultLoadTracks(data)
+sealed class ResultLoadTracks(){
+    class OnSuccess(val data: List<Track>): ResultLoadTracks()
     class NoData : ResultLoadTracks()
     class ServerError : ResultLoadTracks()
     class NoInternet : ResultLoadTracks()

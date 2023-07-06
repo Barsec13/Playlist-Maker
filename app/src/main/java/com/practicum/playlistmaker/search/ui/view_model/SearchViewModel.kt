@@ -7,11 +7,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.player.domain.model.Track
-import com.practicum.playlistmaker.search.data.network.ResultLoadTracks
+import com.practicum.playlistmaker.search.domain.models.ResultLoadTracks
 import com.practicum.playlistmaker.search.domain.api.SearchInteractor
 import com.practicum.playlistmaker.search.domain.models.NetworkError
 import com.practicum.playlistmaker.search.ui.models.SearchStateInterface
-import com.practicum.playlistmaker.util.debounce
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -27,6 +27,8 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
     private val handler = Handler(Looper.getMainLooper())
     private var latestSearchText: String? = null
     private var isClickAllowed = true
+
+    private var searchJob: Job? = null
 
     private val stateLiveData = MutableLiveData<SearchStateInterface>()
 
@@ -51,13 +53,11 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
 
         this.latestSearchText = changedText
 
-        searchDebounce = debounce(
-            SEARCH_DEBOUNCE_DELAY_MILLIS, viewModelScope, false
-        ) { changedText ->
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(SEARCH_DEBOUNCE_DELAY_MILLIS)
             loadTracks(changedText)
         }
-
-        searchDebounce(changedText)
     }
 
     //Ограничение двойного нажатия на трек для открытия плеера
