@@ -1,14 +1,15 @@
 package com.practicum.playlistmaker.search.domain.impl
 
 import com.practicum.playlistmaker.player.domain.model.Track
-import com.practicum.playlistmaker.search.data.network.NetworkClient
 import com.practicum.playlistmaker.search.data.sharedpreferences.SharedPreferencesSearchClient
 import com.practicum.playlistmaker.search.domain.api.SearchInteractor
-import com.practicum.playlistmaker.search.domain.models.NetworkError
+import com.practicum.playlistmaker.search.domain.api.SearchRepository
+import com.practicum.playlistmaker.search.domain.models.ResultLoadTracks
+import kotlinx.coroutines.flow.Flow
 
 class SearchInteractorImpl(
     private val sharedPreferencesSearchClient: SharedPreferencesSearchClient,
-    private val networkClient: NetworkClient,
+    private val searchRepository: SearchRepository,
 ) : SearchInteractor {
     override fun clearHistory() {
         sharedPreferencesSearchClient.clearHistory()
@@ -24,13 +25,7 @@ class SearchInteractorImpl(
 
     override fun loadTracks(
         searchText: String,
-        onSuccess: (List<Track>) -> Unit,
-        noData: (NetworkError) -> Unit,
-        serverError: (NetworkError) -> Unit,
-        noInternet: (NetworkError) -> Unit,
-    ) {
-        networkClient.loadTracks(searchText, onSuccess, noData, serverError, noInternet)
+    ): Flow<ResultLoadTracks> {
+        return searchRepository.loadTracks(searchText)
     }
-
-
 }

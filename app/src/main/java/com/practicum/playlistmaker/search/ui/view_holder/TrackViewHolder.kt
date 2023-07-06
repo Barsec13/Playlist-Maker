@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.TimeUtils.formatTrackDuraction
+import com.practicum.playlistmaker.util.TimeUtils.formatTrackDuraction
 import com.practicum.playlistmaker.player.domain.model.Track
 
 class TrackViewHolder(parentView: ViewGroup) : RecyclerView.ViewHolder(

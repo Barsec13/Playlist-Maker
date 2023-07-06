@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.gson.Gson
 import com.practicum.playlistmaker.player.data.sharedpreferences.SharedPreferencesPlayerClient
 import com.practicum.playlistmaker.player.data.sharedpreferences.SharedPreferencesPlayerClientImpl
+import com.practicum.playlistmaker.search.data.network.CheckConnection
 import com.practicum.playlistmaker.search.data.network.NetworkClient
 import com.practicum.playlistmaker.search.data.network.NetworkClientImpl
 import com.practicum.playlistmaker.search.data.network.iTunesSearchAPI
@@ -27,7 +28,9 @@ val dataModule = module {
     }
 
     single<NetworkClient> {
-        NetworkClientImpl(api = get())
+        NetworkClientImpl(
+            api = get(),
+            checkConnection = get())
     }
 
     factory { Gson() }
@@ -54,5 +57,9 @@ val dataModule = module {
             sharedPref = get(),
             gson = get()
         )
+    }
+
+    single<CheckConnection> {
+        CheckConnection(context = androidContext())
     }
 }

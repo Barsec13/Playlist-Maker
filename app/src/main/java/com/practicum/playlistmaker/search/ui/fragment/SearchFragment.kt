@@ -178,6 +178,7 @@ class SearchFragment : Fragment() {
         showLoad()
         hideHistoryList()
         buttonClear.isEnabled = false
+        hideTracks()
     }
 
     private fun showChangeTextSearch() {
@@ -215,6 +216,7 @@ class SearchFragment : Fragment() {
         hideLoad()
         hideKeyboard()
         hideHistoryList()
+        hideTracks()
         buttonClear.isEnabled = true
         when (networkError) {
             is NetworkError.NoData -> {
@@ -281,6 +283,10 @@ class SearchFragment : Fragment() {
 
     private fun showTracks(tracks: List<Track>) {
         tracksAdapter.setTracks(tracks)
+    }
+
+    private fun hideTracks(){
+        tracksAdapter.setTracks(null)
     }
 
     private fun hideClearIcon() {

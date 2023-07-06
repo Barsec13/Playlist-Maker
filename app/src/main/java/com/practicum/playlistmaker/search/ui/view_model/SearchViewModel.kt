@@ -2,13 +2,18 @@ package com.practicum.playlistmaker.search.ui.view_model
 
 import android.os.Handler
 import android.os.Looper
-import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.player.domain.model.Track
+import com.practicum.playlistmaker.search.domain.models.ResultLoadTracks
 import com.practicum.playlistmaker.search.domain.api.SearchInteractor
+import com.practicum.playlistmaker.search.domain.models.NetworkError
 import com.practicum.playlistmaker.search.ui.models.SearchStateInterface
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel() {
 
@@ -17,11 +22,16 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
         private val SEARCH_REQUEST_TOKEN = Any()
     }
 
+    private lateinit var searchDebounce: (String) -> Unit
+
     private val handler = Handler(Looper.getMainLooper())
     private var latestSearchText: String? = null
     private var isClickAllowed = true
 
+    private var searchJob: Job? = null
+
     private val stateLiveData = MutableLiveData<SearchStateInterface>()
+
     fun observeState(): LiveData<SearchStateInterface> = stateLiveData
 
     private fun renderState(state: SearchStateInterface) {
@@ -43,17 +53,11 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
 
         this.latestSearchText = changedText
 
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-
-        val searchRunnable = Runnable { loadTracks(changedText) }
-
-        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY_MILLIS
-
-        handler.postAtTime(
-            searchRunnable,
-            SEARCH_REQUEST_TOKEN,
-            postTime,
-        )
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(SEARCH_DEBOUNCE_DELAY_MILLIS)
+            loadTracks(changedText)
+        }
     }
 
     //Ограничение двойного нажатия на трек для открытия плеера
@@ -63,15 +67,10 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
         if (isClickAllowed) {
             isClickAllowed = false
 
-            val clickRunnable = Runnable { isClickAllowed = true }
-
-            val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY_MILLIS
-
-            handler.postAtTime(
-                clickRunnable,
-                SEARCH_REQUEST_TOKEN,
-                postTime,
-            )
+            viewModelScope.launch {
+                delay(SEARCH_DEBOUNCE_DELAY_MILLIS)
+                isClickAllowed = true
+            }
         }
         return current
     }
@@ -79,17 +78,38 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
     fun loadTracks(searchText: String) {
         if (searchText.isEmpty()) return
         renderState(SearchStateInterface.Loading)
-        searchInteractor.loadTracks(
-            searchText = searchText,
-            onSuccess = { tracks -> renderState(SearchStateInterface.SearchTracks(tracks))
-            },
-            noData = { error -> renderState(SearchStateInterface.Error(error))
-            },
-            serverError = { error -> renderState(SearchStateInterface.Error(error))
-            },
-            noInternet = { error -> renderState(SearchStateInterface.Error(error))
-            }
-        )
+
+        viewModelScope.launch {
+            searchInteractor
+                .loadTracks(searchText)
+                .collect { result: ResultLoadTracks ->
+                    when (result) {
+                        is ResultLoadTracks.OnSuccess -> renderState(
+                            SearchStateInterface.SearchTracks(
+                                result.data!!
+                            )
+                        )
+
+                        is ResultLoadTracks.NoData -> renderState(
+                            SearchStateInterface.Error(
+                                NetworkError.NoData()
+                            )
+                        )
+
+                        is ResultLoadTracks.NoInternet -> renderState(
+                            SearchStateInterface.Error(
+                                NetworkError.NoInternet()
+                            )
+                        )
+
+                        is ResultLoadTracks.ServerError -> renderState(
+                            SearchStateInterface.Error(
+                                NetworkError.ServerError()
+                            )
+                        )
+                    }
+                }
+        }
     }
 
     fun visibleHistoryTrack() {
@@ -106,7 +126,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
         visibleHistoryTrack()
     }
 
-    private fun tracksHistoryFromJson(): List<Track>{
+    private fun tracksHistoryFromJson(): List<Track> {
         return searchInteractor.tracksHistoryFromJson()
     }
 
