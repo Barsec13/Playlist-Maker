@@ -13,6 +13,7 @@ val viewModelModule = module {
         PlayerViewModel(
             trackId = trackId,
             playerInteractor = get(),
+            favoriteTrackInteractor = get()
         )
     }
 
@@ -30,7 +31,7 @@ val viewModelModule = module {
     }
 
     viewModel{
-        FavoriteTrackViewModel()
+        FavoriteTrackViewModel(favoriteTrackInteractor = get())
     }
 
     viewModel{

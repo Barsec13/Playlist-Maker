@@ -15,11 +15,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.util.TimeUtils
 import com.practicum.playlistmaker.databinding.FragmentPlayerBinding
 import com.practicum.playlistmaker.player.domain.model.Track
+import com.practicum.playlistmaker.player.ui.models.LikeStateInterface
 import com.practicum.playlistmaker.player.ui.models.PlayerStateInterface
 import com.practicum.playlistmaker.player.ui.view_model.PlayerViewModel
+import com.practicum.playlistmaker.util.TimeUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -37,6 +38,7 @@ class PlayerFragment : Fragment() {
     lateinit var country: TextView
     lateinit var duration: TextView
     lateinit var buttonPlay: FloatingActionButton
+    lateinit var buttonLike: ImageView
 
     companion object {
         private const val SEND_TRACK_ID = "send_track_id"
@@ -69,10 +71,10 @@ class PlayerFragment : Fragment() {
         //Присвоить значение переменным
         initViews()
 
-        playerViewModel.getTrackHistory()
+        playerViewModel.getInfoTrack()
 
-        playerViewModel.observeTrackHistoryState().observe(viewLifecycleOwner) { trackHistory ->
-            getInfoTrack(trackHistory)
+        playerViewModel.observeTrackState().observe(viewLifecycleOwner) { track ->
+            getInfoTrack(track)
         }
 
         playerViewModel.observePlayerState().observe(viewLifecycleOwner) {
@@ -81,6 +83,10 @@ class PlayerFragment : Fragment() {
 
         playerViewModel.observerTimerState().observe(viewLifecycleOwner) { time ->
             duration.text = time
+        }
+
+        playerViewModel.observeIsFavoriteState().observe(viewLifecycleOwner) {
+            renderLike(it)
         }
 
         //Listener
@@ -105,6 +111,16 @@ class PlayerFragment : Fragment() {
             is PlayerStateInterface.Play -> play()
             is PlayerStateInterface.Pause -> pause()
             is PlayerStateInterface.Prepare -> prepare()
+        }
+    }
+
+    private fun renderLike(state: LikeStateInterface) {
+        when (state) {
+            is LikeStateInterface.LikeTrack ->
+                buttonLike.setImageResource(R.drawable.ic_button_like_on)
+
+            is LikeStateInterface.NotLikeTrack ->
+                buttonLike.setImageResource(R.drawable.ic_button_like_off)
         }
     }
 
@@ -137,6 +153,7 @@ class PlayerFragment : Fragment() {
         country = binding.countryData
         duration = binding.duration
         buttonPlay = binding.playTrack
+        buttonLike = binding.likeTrack
     }
 
     //Настроить Listeners
@@ -149,6 +166,10 @@ class PlayerFragment : Fragment() {
         buttonPlay.setOnClickListener() {
             playerViewModel.playbackControl()
         }
+        buttonLike.setOnClickListener() {
+            playerViewModel.onFavoriteClicked()
+        }
+
     }
 
     private fun showDataTrack(track: Track) {

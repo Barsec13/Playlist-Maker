@@ -1,7 +1,9 @@
 package com.practicum.playlistmaker.di
 
 import android.content.Context
+import androidx.room.Room
 import com.google.gson.Gson
+import com.practicum.playlistmaker.db.data.AppDataBase
 import com.practicum.playlistmaker.player.data.sharedpreferences.SharedPreferencesPlayerClient
 import com.practicum.playlistmaker.player.data.sharedpreferences.SharedPreferencesPlayerClientImpl
 import com.practicum.playlistmaker.search.data.network.CheckConnection
@@ -42,7 +44,8 @@ val dataModule = module {
     single<SharedPreferencesSearchClient> {
         SharedPreferencesSearchClientImpl(
             sharedPref = get(),
-            gson = get()
+            gson = get(),
+            appDataBase = get()
         )
     }
 
@@ -61,5 +64,9 @@ val dataModule = module {
 
     single<CheckConnection> {
         CheckConnection(context = androidContext())
+    }
+
+    single {
+        Room.databaseBuilder(androidContext(), AppDataBase::class.java, "database.db").build()
     }
 }

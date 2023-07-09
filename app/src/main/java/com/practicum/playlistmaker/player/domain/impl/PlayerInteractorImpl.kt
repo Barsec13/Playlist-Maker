@@ -1,15 +1,18 @@
 package com.practicum.playlistmaker.player.domain.impl
 
-import com.practicum.playlistmaker.util.TimeUtils.formatTrackDuraction
 import com.practicum.playlistmaker.player.data.sharedpreferences.SharedPreferencesPlayerClient
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
+import com.practicum.playlistmaker.player.domain.api.PlayerRepository
 import com.practicum.playlistmaker.player.domain.api.PlayerStateListener
 import com.practicum.playlistmaker.player.domain.api.TrackPlayer
 import com.practicum.playlistmaker.player.domain.model.Track
+import com.practicum.playlistmaker.util.TimeUtils.formatTrackDuraction
+import kotlinx.coroutines.flow.Flow
 
 class PlayerInteractorImpl(
     private val trackPlayer: TrackPlayer,
     private val sharedPreferencesPlayerClientImpl: SharedPreferencesPlayerClient,
+    private val playerRepository: PlayerRepository
 ) : PlayerInteractor {
     override fun preparePlayer(previewUrl: String?) {
         trackPlayer.preparePlayer(previewUrl)
@@ -39,7 +42,15 @@ class PlayerInteractorImpl(
         return formatTrackDuraction(trackPlayer.getCurrentPosition())
     }
 
-    override fun getTrackHistory(): List<Track> {
-        return sharedPreferencesPlayerClientImpl.tracksHistoryFromJson()
+    override fun getTrack(trackId: Int): Track? {
+        return sharedPreferencesPlayerClientImpl.tracksHistoryFromJson().find { it.trackId == trackId }
+    }
+
+    override suspend fun getTrackFromDataBase(trackId: Int): Flow<Track> {
+        return playerRepository.getFavoriteTrackById(trackId)
+    }
+
+    override fun checkFavorite(sendTrack: Track) {
+        return
     }
 }

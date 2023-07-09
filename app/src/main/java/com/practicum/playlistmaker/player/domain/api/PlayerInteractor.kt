@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.player.domain.api
 
 import com.practicum.playlistmaker.player.domain.model.Track
+import kotlinx.coroutines.flow.Flow
 
 interface PlayerInteractor {
 
@@ -11,5 +12,7 @@ interface PlayerInteractor {
     fun unSubscribeOnPlayer()
     fun releasePlayer()
     fun getCurrentPosition(): String
-    fun getTrackHistory(): List<Track>
+    fun getTrack(trackId: Int): Track?
+    fun checkFavorite(sendTrack: Track)
+    suspend fun getTrackFromDataBase(trackId: Int): Flow<Track>
 }

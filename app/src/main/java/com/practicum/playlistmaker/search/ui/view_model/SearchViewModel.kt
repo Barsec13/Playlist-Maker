@@ -1,15 +1,13 @@
 package com.practicum.playlistmaker.search.ui.view_model
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.player.domain.model.Track
-import com.practicum.playlistmaker.search.domain.models.ResultLoadTracks
 import com.practicum.playlistmaker.search.domain.api.SearchInteractor
 import com.practicum.playlistmaker.search.domain.models.NetworkError
+import com.practicum.playlistmaker.search.domain.models.ResultLoadTracks
 import com.practicum.playlistmaker.search.ui.models.SearchStateInterface
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -19,12 +17,8 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
-        private val SEARCH_REQUEST_TOKEN = Any()
     }
 
-    private lateinit var searchDebounce: (String) -> Unit
-
-    private val handler = Handler(Looper.getMainLooper())
     private var latestSearchText: String? = null
     private var isClickAllowed = true
 
@@ -39,7 +33,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
     }
 
     override fun onCleared() {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+        searchJob?.cancel()
     }
 
     //Запускаем поиск, если пользователь 2 секунды не вводит текст
@@ -47,7 +41,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
         changedText: String,
         focus: Boolean) {
 
-        if (latestSearchText == changedText || !focus || changedText.isNullOrEmpty()) return
+        if (latestSearchText == changedText || !focus || changedText.isEmpty()) return
 
         renderState(SearchStateInterface.changeTextSearch)
 
@@ -62,7 +56,6 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
 
     //Ограничение двойного нажатия на трек для открытия плеера
     fun clickDebounce(): Boolean {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
@@ -86,7 +79,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
                     when (result) {
                         is ResultLoadTracks.OnSuccess -> renderState(
                             SearchStateInterface.SearchTracks(
-                                result.data!!
+                                result.data
                             )
                         )
 
@@ -113,8 +106,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
     }
 
     fun visibleHistoryTrack() {
-        val historyTracks = tracksHistoryFromJson()
-        renderState(SearchStateInterface.HistoryTracks(historyTracks))
+        tracksHistoryFromJson()
     }
 
     fun clickButtonClearHistory() {
@@ -126,12 +118,16 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
         visibleHistoryTrack()
     }
 
-    private fun tracksHistoryFromJson(): List<Track> {
-        return searchInteractor.tracksHistoryFromJson()
+    private fun tracksHistoryFromJson() {
+        viewModelScope.launch {
+            renderState(
+                SearchStateInterface.HistoryTracks(searchInteractor.tracksHistoryFromJson())
+            )
+        }
     }
 
     fun onTrackClick(track: Track, position: Int) {
-        if (clickDebounce()){
+        if (clickDebounce()) {
             searchInteractor.addTrack(track, position)
         }
     }
