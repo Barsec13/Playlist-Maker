@@ -50,7 +50,8 @@ class PlayerInteractorImpl(
         return playerRepository.getFavoriteTrackById(trackId)
     }
 
-    override fun checkFavorite(sendTrack: Track) {
-        return
+    override suspend fun checkFavorite(sendTrack: Track): Boolean {
+        val track = getTrackFromDataBase(sendTrack.trackId)
+        return (track != null)
     }
 }

@@ -3,11 +3,11 @@ package com.practicum.playlistmaker.util
 import com.practicum.playlistmaker.player.domain.model.Track
 
 object CheckTrackInFavorites{
-    fun checkTrackInFavorites(Tracks: List<Track>, idFavoriteTracks: List<Int>): List<Track> {
-        Tracks.map { track ->
-            if(track.trackId in idFavoriteTracks)
-                track.isFavorite = true
+    fun checkTrackInFavorites(tracks: List<Track>, idFavoriteTracks: List<Int>): List<Track> {
+
+        tracks.forEach{
+            it.isFavorite = it.trackId in idFavoriteTracks
         }
-        return Tracks
+        return tracks
     }
 }

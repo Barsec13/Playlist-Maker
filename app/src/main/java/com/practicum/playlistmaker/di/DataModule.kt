@@ -58,7 +58,8 @@ val dataModule = module {
     single<SharedPreferencesPlayerClient> {
         SharedPreferencesPlayerClientImpl(
             sharedPref = get(),
-            gson = get()
+            gson = get(),
+            appDataBase = get()
         )
     }
 

@@ -116,6 +116,7 @@ class PlayerViewModel(
 
     fun getInfoTrack() {
         sendTrack = playerInteractor.getTrack(trackId)
+
         if (sendTrack == null) getTrackFromDataBase(trackId)
         else trackState(sendTrack!!)
     }
@@ -123,6 +124,7 @@ class PlayerViewModel(
     private fun trackState(track: Track?) {
         this.sendTrack = track
         if (sendTrack == null) return
+
         checkFavorite(sendTrack)
         trackStateLiveData.postValue(sendTrack!!)
     }
@@ -139,12 +141,12 @@ class PlayerViewModel(
     fun onFavoriteClicked() {
         viewModelScope.launch {
             if (sendTrack!!.isFavorite) {
-                favoriteTrackInteractor.deleteTrackOnFavorite(sendTrack!!)
                 sendTrack!!.isFavorite = false
+                favoriteTrackInteractor.deleteTrackOnFavorite(sendTrack!!)
                 isFavoriteStateLiveData.postValue(LikeStateInterface.NotLikeTrack)
             } else {
-                favoriteTrackInteractor.insertFavoriteTrack(sendTrack!!)
                 sendTrack!!.isFavorite = true
+                favoriteTrackInteractor.insertFavoriteTrack(sendTrack!!)
                 isFavoriteStateLiveData.postValue(LikeStateInterface.LikeTrack)
             }
         }

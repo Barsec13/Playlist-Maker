@@ -28,7 +28,7 @@ class SharedPreferencesSearchClientImpl(
         val historyTracks = gson.fromJson<ArrayList<Track>>(jsonHistoryTracks, typeTokenArrayList)
 
         if (historyTracks.find { it.trackId == track.trackId } != null) {
-            historyTracks.remove(track)
+            historyTracks.removeAll{ it.trackId == track.trackId }
             historyTracks.add(0, track)
             saveTrackForHistory(historyTracks)
             return
@@ -48,11 +48,16 @@ class SharedPreferencesSearchClientImpl(
 
         var tracksHistory =
             gson.fromJson<ArrayList<Track>>(jsonHistoryTracks, typeTokenArrayList)
+
         val idFavoriteTracks = appDataBase.trackDao().getIdFavoriteTrack()
+
         tracksHistory = CheckTrackInFavorites.checkTrackInFavorites(
             tracksHistory,
             idFavoriteTracks
         ) as ArrayList<Track>
+
+
+
         return tracksHistory
     }
 
