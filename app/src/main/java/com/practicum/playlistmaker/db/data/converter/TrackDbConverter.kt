@@ -1,7 +1,10 @@
 package com.practicum.playlistmaker.db.data.converter
 
+import android.annotation.SuppressLint
 import com.practicum.playlistmaker.db.data.entity.TrackEntity
 import com.practicum.playlistmaker.player.domain.model.Track
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class TrackDbConverter {
     fun map(track: Track): TrackEntity {
@@ -16,6 +19,7 @@ class TrackDbConverter {
             track.primaryGenreName,
             track.country,
             track.previewUrl,
+            getCurrentDate()
         )
     }
 
@@ -32,5 +36,11 @@ class TrackDbConverter {
             trackEntity.country,
             trackEntity.previewUrl,
         )
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun getCurrentDate(): String {
+        val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
+        return sdf.format(Date())
     }
 }

@@ -29,6 +29,7 @@ class PlayerViewModel(
                 PlayerState.STATE_DEFAULT -> onScreenDestroyed()
             }
         }
+        getInfoTrack()
     }
 
     companion object {
@@ -55,7 +56,6 @@ class PlayerViewModel(
     }
 
     fun playbackControl() {
-
         when (playerState) {
             PlayerState.STATE_PLAYING -> {
                 playerInteractor.pausePlayer()
@@ -70,6 +70,8 @@ class PlayerViewModel(
     }
 
     fun activityPause() {
+        if (playerState == PlayerState.STATE_PREPARED) return
+        playerState = PlayerState.STATE_PAUSED
         playerInteractor.pausePlayer()
     }
 
@@ -86,7 +88,7 @@ class PlayerViewModel(
     }
 
 
-    fun startPreparePlayer(previewUrl: String?) {
+    private fun startPreparePlayer(previewUrl: String?) {
         playerInteractor.preparePlayer(previewUrl)
         playerState = PlayerState.STATE_PREPARED
         playerStateLiveData.postValue(PlayerStateInterface.Prepare)
@@ -100,6 +102,7 @@ class PlayerViewModel(
     private fun preparePlayer() {
         playerState = PlayerState.STATE_PREPARED
         playerStateLiveData.postValue(PlayerStateInterface.Prepare)
+        timerJob?.cancel()
     }
 
     private fun onScreenDestroyed() {
@@ -114,11 +117,18 @@ class PlayerViewModel(
         return playerInteractor.getCurrentPosition()
     }
 
-    fun getInfoTrack() {
+    private fun getInfoTrack() {
         sendTrack = playerInteractor.getTrack(trackId)
 
         if (sendTrack == null) getTrackFromDataBase(trackId)
-        else trackState(sendTrack!!)
+        else {
+            viewModelScope.launch {
+                playerInteractor.checkFavorite(sendTrack!!.trackId).collect {
+                    sendTrack!!.isFavorite = it
+                    trackState(sendTrack)
+                }
+            }
+        }
     }
 
     private fun trackState(track: Track?) {
@@ -126,6 +136,8 @@ class PlayerViewModel(
         if (sendTrack == null) return
 
         checkFavorite(sendTrack)
+        startPreparePlayer(sendTrack!!.previewUrl)
+        preparePlayer()
         trackStateLiveData.postValue(sendTrack!!)
     }
 

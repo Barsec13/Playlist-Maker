@@ -24,7 +24,7 @@ class FavoriteTrackViewModel(
             favoriteTrackInteractor.getFavoriteTracks().collect(){
                 favoriteTracks ->
                 if (favoriteTracks.isEmpty()) renderState(FavoriteStateInterface.FavoriteTracksIsEmpty)
-                else renderState(FavoriteStateInterface.FavoriteTracks(favoriteTracks = favoriteTracks))
+                else renderState(FavoriteStateInterface.FavoriteTracks(favoriteTracks = favoriteTracks.reversed()))
             }
 
         }

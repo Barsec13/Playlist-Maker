@@ -13,6 +13,6 @@ interface PlayerInteractor {
     fun releasePlayer()
     fun getCurrentPosition(): String
     fun getTrack(trackId: Int): Track?
-    suspend fun checkFavorite(sendTrack: Track): Boolean
+    suspend fun checkFavorite(trackId: Int): Flow<Boolean>
     suspend fun getTrackFromDataBase(trackId: Int): Flow<Track>
 }

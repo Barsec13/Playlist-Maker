@@ -5,4 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface PlayerRepository {
     suspend fun getFavoriteTrackById(strackId: Int): Flow<Track>
+    suspend fun checkFavorite(trackId: Int): Flow<Boolean>
 }

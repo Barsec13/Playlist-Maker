@@ -29,7 +29,9 @@ class FavoriteTrackRepositoryImpl(
     }
 
     override fun getFavoriteTracks(): Flow<List<Track>> = flow {
-        val tracks = appDataBase.trackDao().getFavoriteTracks()
+        val tracks = appDataBase.trackDao()
+            .getFavoriteTracks()
+            .sortedWith(compareBy(TrackEntity::currentDate))
         emit(converterFromTrackEntity(tracks))
     }
 

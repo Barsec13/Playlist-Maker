@@ -48,8 +48,6 @@ class PlayerFragment : Fragment() {
         }
     }
 
-    private var previewUrl: String? = null
-
     private val playerViewModel: PlayerViewModel by viewModel {
         parametersOf(requireArguments().getInt(SEND_TRACK_ID))
     }
@@ -70,8 +68,6 @@ class PlayerFragment : Fragment() {
 
         //Присвоить значение переменным
         initViews()
-
-        playerViewModel.getInfoTrack()
 
         playerViewModel.observeTrackState().observe(viewLifecycleOwner) { track ->
             getInfoTrack(track)
@@ -128,7 +124,6 @@ class PlayerFragment : Fragment() {
         buttonPlay.isEnabled = true
         buttonPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
         duration.text = resources.getString(R.string.duration_start)
-        //R.string.duration_start.toString()
     }
 
     private fun play() {
@@ -136,6 +131,7 @@ class PlayerFragment : Fragment() {
     }
 
     private fun pause() {
+        buttonPlay.isEnabled = true
         buttonPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
     }
 
@@ -169,12 +165,11 @@ class PlayerFragment : Fragment() {
         buttonLike.setOnClickListener() {
             playerViewModel.onFavoriteClicked()
         }
-
     }
 
     private fun showDataTrack(track: Track) {
         // Ссылка на пробный кусок песни
-        previewUrl = track.previewUrl
+        //previewUrl = track.previewUrl
         trackName.text = track.trackName
         artistName.text = track.artistName
         trackTime.text = TimeUtils.formatTrackDuraction(track.trackTimeMillis.toInt())
@@ -191,12 +186,5 @@ class PlayerFragment : Fragment() {
             .centerCrop()
             .transform(RoundedCorners(roundingRadius))
             .into(artworkUrl100)
-
-        startPreparePlayer(previewUrl)
-    }
-
-    //Подготовить воспроизведение
-    private fun startPreparePlayer(previewUrl: String?) {
-        playerViewModel.startPreparePlayer(previewUrl)
     }
 }

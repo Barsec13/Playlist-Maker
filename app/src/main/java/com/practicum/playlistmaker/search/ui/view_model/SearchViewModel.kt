@@ -41,7 +41,8 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
         changedText: String,
         focus: Boolean) {
 
-        if (latestSearchText == changedText || !focus || changedText.isEmpty()) return
+        if (latestSearchText == changedText ||
+            !focus || changedText.isEmpty()) return
 
         renderState(SearchStateInterface.changeTextSearch)
 
@@ -116,6 +117,10 @@ class SearchViewModel(private val searchInteractor: SearchInteractor): ViewModel
 
     fun clearSearchText() {
         visibleHistoryTrack()
+    }
+
+    fun clearLatestTextSearch(){
+        latestSearchText = null
     }
 
     private fun tracksHistoryFromJson() {

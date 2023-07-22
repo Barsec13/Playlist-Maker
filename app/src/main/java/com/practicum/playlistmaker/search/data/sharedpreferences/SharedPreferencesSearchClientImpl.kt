@@ -56,8 +56,6 @@ class SharedPreferencesSearchClientImpl(
             idFavoriteTracks
         ) as ArrayList<Track>
 
-
-
         return tracksHistory
     }
 

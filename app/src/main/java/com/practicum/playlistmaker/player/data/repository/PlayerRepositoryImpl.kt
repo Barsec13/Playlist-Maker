@@ -13,11 +13,16 @@ class PlayerRepositoryImpl(
     private val trackDbConverter: TrackDbConverter,
 ) : PlayerRepository {
     override suspend fun getFavoriteTrackById(trackId: Int): Flow<Track> = flow {
-        val track = appDataBase.trackDao().getFavoriteTrackById(trackId)
+        val track = appDataBase.trackDao().getFavoriteTrackById(trackId) ?: return@flow
         emit(converterFromTrackEntity(track))
     }
 
     private fun converterFromTrackEntity(trackEntity: TrackEntity): Track {
         return trackDbConverter.map(trackEntity)
+    }
+
+    override suspend fun checkFavorite(trackId: Int): Flow<Boolean> = flow {
+        val idFavoriteTracks = appDataBase.trackDao().getIdFavoriteTrack()
+        emit (trackId in idFavoriteTracks)
     }
 }
