@@ -15,11 +15,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.util.TimeUtils
 import com.practicum.playlistmaker.databinding.FragmentPlayerBinding
 import com.practicum.playlistmaker.player.domain.model.Track
+import com.practicum.playlistmaker.player.ui.models.LikeStateInterface
 import com.practicum.playlistmaker.player.ui.models.PlayerStateInterface
 import com.practicum.playlistmaker.player.ui.view_model.PlayerViewModel
+import com.practicum.playlistmaker.util.TimeUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -37,6 +38,7 @@ class PlayerFragment : Fragment() {
     lateinit var country: TextView
     lateinit var duration: TextView
     lateinit var buttonPlay: FloatingActionButton
+    lateinit var buttonLike: ImageView
 
     companion object {
         private const val SEND_TRACK_ID = "send_track_id"
@@ -45,8 +47,6 @@ class PlayerFragment : Fragment() {
             return bundleOf(SEND_TRACK_ID to sendTrackId)
         }
     }
-
-    private var previewUrl: String? = null
 
     private val playerViewModel: PlayerViewModel by viewModel {
         parametersOf(requireArguments().getInt(SEND_TRACK_ID))
@@ -69,10 +69,8 @@ class PlayerFragment : Fragment() {
         //Присвоить значение переменным
         initViews()
 
-        playerViewModel.getTrackHistory()
-
-        playerViewModel.observeTrackHistoryState().observe(viewLifecycleOwner) { trackHistory ->
-            getInfoTrack(trackHistory)
+        playerViewModel.observeTrackState().observe(viewLifecycleOwner) { track ->
+            getInfoTrack(track)
         }
 
         playerViewModel.observePlayerState().observe(viewLifecycleOwner) {
@@ -81,6 +79,10 @@ class PlayerFragment : Fragment() {
 
         playerViewModel.observerTimerState().observe(viewLifecycleOwner) { time ->
             duration.text = time
+        }
+
+        playerViewModel.observeIsFavoriteState().observe(viewLifecycleOwner) {
+            renderLike(it)
         }
 
         //Listener
@@ -108,11 +110,20 @@ class PlayerFragment : Fragment() {
         }
     }
 
+    private fun renderLike(state: LikeStateInterface) {
+        when (state) {
+            is LikeStateInterface.LikeTrack ->
+                buttonLike.setImageResource(R.drawable.ic_button_like_on)
+
+            is LikeStateInterface.NotLikeTrack ->
+                buttonLike.setImageResource(R.drawable.ic_button_like_off)
+        }
+    }
+
     private fun prepare() {
         buttonPlay.isEnabled = true
         buttonPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
         duration.text = resources.getString(R.string.duration_start)
-        //R.string.duration_start.toString()
     }
 
     private fun play() {
@@ -120,6 +131,7 @@ class PlayerFragment : Fragment() {
     }
 
     private fun pause() {
+        buttonPlay.isEnabled = true
         buttonPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
     }
 
@@ -137,6 +149,7 @@ class PlayerFragment : Fragment() {
         country = binding.countryData
         duration = binding.duration
         buttonPlay = binding.playTrack
+        buttonLike = binding.likeTrack
     }
 
     //Настроить Listeners
@@ -149,11 +162,14 @@ class PlayerFragment : Fragment() {
         buttonPlay.setOnClickListener() {
             playerViewModel.playbackControl()
         }
+        buttonLike.setOnClickListener() {
+            playerViewModel.onFavoriteClicked()
+        }
     }
 
     private fun showDataTrack(track: Track) {
         // Ссылка на пробный кусок песни
-        previewUrl = track.previewUrl
+        //previewUrl = track.previewUrl
         trackName.text = track.trackName
         artistName.text = track.artistName
         trackTime.text = TimeUtils.formatTrackDuraction(track.trackTimeMillis.toInt())
@@ -170,12 +186,5 @@ class PlayerFragment : Fragment() {
             .centerCrop()
             .transform(RoundedCorners(roundingRadius))
             .into(artworkUrl100)
-
-        startPreparePlayer(previewUrl)
-    }
-
-    //Подготовить воспроизведение
-    private fun startPreparePlayer(previewUrl: String?) {
-        playerViewModel.startPreparePlayer(previewUrl)
     }
 }

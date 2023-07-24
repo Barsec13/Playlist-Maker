@@ -9,7 +9,7 @@ const val HISTORY_TRACKS_KEY = "history_tracks_key"
 
 class SharedPreferencesPlayerClientImpl(
     private val sharedPref: SharedPreferences,
-    private val gson: Gson) :
+    private val gson: Gson,):
     SharedPreferencesPlayerClient {
 
     private val typeTokenArrayList = object : TypeToken<ArrayList<Track>>() {}.type
@@ -17,6 +17,7 @@ class SharedPreferencesPlayerClientImpl(
     override fun tracksHistoryFromJson(): List<Track> {
         val jsonHistoryTracks =
             sharedPref.getString(HISTORY_TRACKS_KEY, null) ?: return ArrayList<Track>()
+
         return gson.fromJson<ArrayList<Track>>(jsonHistoryTracks, typeTokenArrayList)
     }
 }

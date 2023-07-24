@@ -1,7 +1,12 @@
-package com.practicum.playlistmaker.player.domain.model
+package com.practicum.playlistmaker.db.data.entity
 
-data class Track(
-    val trackId: Int,
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "favorite_track_table")
+data class TrackEntity(
+    @PrimaryKey
+    val id: Int,
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: String,
@@ -11,9 +16,5 @@ data class Track(
     val primaryGenreName: String,
     val country: String,
     val previewUrl: String,
-    var isFavorite: Boolean = false
-){
-
-    fun getCoverArtwork() = artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
-}
-
+    val currentDate: String
+)

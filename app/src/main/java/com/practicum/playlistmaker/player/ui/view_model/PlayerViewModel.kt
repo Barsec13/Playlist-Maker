@@ -4,9 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.practicum.playlistmaker.db.domain.api.FavoriteTrackInteractor
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.model.PlayerState
 import com.practicum.playlistmaker.player.domain.model.Track
+import com.practicum.playlistmaker.player.ui.models.LikeStateInterface
 import com.practicum.playlistmaker.player.ui.models.PlayerStateInterface
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -15,6 +17,7 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
     private val trackId: Int,
+    private val favoriteTrackInteractor: FavoriteTrackInteractor,
 ) : ViewModel() {
 
     init {
@@ -26,6 +29,7 @@ class PlayerViewModel(
                 PlayerState.STATE_DEFAULT -> onScreenDestroyed()
             }
         }
+        getInfoTrack()
     }
 
     companion object {
@@ -34,13 +38,16 @@ class PlayerViewModel(
 
     private var timerJob: Job? = null
     var playerState = PlayerState.STATE_DEFAULT
+    private var sendTrack: Track? = null
 
     private val playerStateLiveData = MutableLiveData<PlayerStateInterface>()
     private val timerLiveData = MutableLiveData<String>()
-    private val trackHistoryStateLiveData = MutableLiveData<Track>()
+    private val trackStateLiveData = MutableLiveData<Track>()
+    private val isFavoriteStateLiveData = MutableLiveData<LikeStateInterface>()
     fun observePlayerState(): LiveData<PlayerStateInterface> = playerStateLiveData
     fun observerTimerState(): LiveData<String> = timerLiveData
-    fun observeTrackHistoryState(): LiveData<Track> = trackHistoryStateLiveData
+    fun observeTrackState(): LiveData<Track> = trackStateLiveData
+    fun observeIsFavoriteState(): LiveData<LikeStateInterface> = isFavoriteStateLiveData
 
     override fun onCleared() {
         pausePlayer()
@@ -49,10 +56,8 @@ class PlayerViewModel(
     }
 
     fun playbackControl() {
-
         when (playerState) {
             PlayerState.STATE_PLAYING -> {
-                //handler.removeCallbacksAndMessages(null)
                 playerInteractor.pausePlayer()
             }
 
@@ -65,13 +70,14 @@ class PlayerViewModel(
     }
 
     fun activityPause() {
+        if (playerState == PlayerState.STATE_PREPARED) return
+        playerState = PlayerState.STATE_PAUSED
         playerInteractor.pausePlayer()
     }
 
     private fun startPlayer() {
         playerState = PlayerState.STATE_PLAYING
         playerStateLiveData.postValue(PlayerStateInterface.Play)
-
         startTimer()
     }
 
@@ -82,7 +88,7 @@ class PlayerViewModel(
     }
 
 
-    fun startPreparePlayer(previewUrl: String?) {
+    private fun startPreparePlayer(previewUrl: String?) {
         playerInteractor.preparePlayer(previewUrl)
         playerState = PlayerState.STATE_PREPARED
         playerStateLiveData.postValue(PlayerStateInterface.Prepare)
@@ -96,6 +102,7 @@ class PlayerViewModel(
     private fun preparePlayer() {
         playerState = PlayerState.STATE_PREPARED
         playerStateLiveData.postValue(PlayerStateInterface.Prepare)
+        timerJob?.cancel()
     }
 
     private fun onScreenDestroyed() {
@@ -110,13 +117,28 @@ class PlayerViewModel(
         return playerInteractor.getCurrentPosition()
     }
 
-    fun getTrackHistory() {
-        val sendTrack = playerInteractor.getTrackHistory().find { it.trackId == trackId } ?: return
-        trackState(sendTrack)
+    private fun getInfoTrack() {
+        sendTrack = playerInteractor.getTrack(trackId)
+
+        if (sendTrack == null) getTrackFromDataBase(trackId)
+        else {
+            viewModelScope.launch {
+                playerInteractor.checkFavorite(sendTrack!!.trackId).collect {
+                    sendTrack!!.isFavorite = it
+                    trackState(sendTrack)
+                }
+            }
+        }
     }
 
-    private fun trackState(track: Track) {
-        trackHistoryStateLiveData.postValue(track)
+    private fun trackState(track: Track?) {
+        this.sendTrack = track
+        if (sendTrack == null) return
+
+        checkFavorite(sendTrack)
+        startPreparePlayer(sendTrack!!.previewUrl)
+        preparePlayer()
+        trackStateLiveData.postValue(sendTrack!!)
     }
 
     private fun startTimer() {
@@ -124,6 +146,34 @@ class PlayerViewModel(
             while (playerState == PlayerState.STATE_PLAYING) {
                 delay(SEARCH_DEBOUNCE_DELAY_MILLIS)
                 timerLiveData.value = getCurrentPosition()
+            }
+        }
+    }
+
+    fun onFavoriteClicked() {
+        viewModelScope.launch {
+            if (sendTrack!!.isFavorite) {
+                sendTrack!!.isFavorite = false
+                favoriteTrackInteractor.deleteTrackOnFavorite(sendTrack!!)
+                isFavoriteStateLiveData.postValue(LikeStateInterface.NotLikeTrack)
+            } else {
+                sendTrack!!.isFavorite = true
+                favoriteTrackInteractor.insertFavoriteTrack(sendTrack!!)
+                isFavoriteStateLiveData.postValue(LikeStateInterface.LikeTrack)
+            }
+        }
+    }
+
+    fun checkFavorite(sendTrack: Track?) {
+        if (sendTrack!!.isFavorite) isFavoriteStateLiveData.postValue(LikeStateInterface.LikeTrack)
+        else isFavoriteStateLiveData.postValue(LikeStateInterface.NotLikeTrack)
+    }
+
+    private fun getTrackFromDataBase(trackId: Int) {
+        viewModelScope.launch {
+            playerInteractor.getTrackFromDataBase(trackId).collect() {
+                it.isFavorite = true
+                trackState(it)
             }
         }
     }

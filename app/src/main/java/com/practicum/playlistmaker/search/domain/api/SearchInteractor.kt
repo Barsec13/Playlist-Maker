@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface SearchInteractor {
     fun clearHistory()
 
-    fun tracksHistoryFromJson(): List<Track>
+    suspend fun tracksHistoryFromJson(): List<Track>
 
     fun addTrack(track: Track, position: Int)
 

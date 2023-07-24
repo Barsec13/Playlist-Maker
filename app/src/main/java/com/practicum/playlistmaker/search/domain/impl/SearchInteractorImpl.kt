@@ -15,7 +15,7 @@ class SearchInteractorImpl(
         sharedPreferencesSearchClient.clearHistory()
     }
 
-    override fun tracksHistoryFromJson(): List<Track> {
+    override suspend fun tracksHistoryFromJson(): List<Track> {
         return sharedPreferencesSearchClient.tracksHistoryFromJson()
     }
 
