@@ -17,5 +17,7 @@
         <item name="edit_text">@color/white</item>
         <item name="button_media">@color/dark_gray</item>
         <item name="item_menu">@color/white</item>
+        <item name="snackbar">@color/white</item>
+        <item name="snackbar_text">@color/black</item>
     </style>
 </resources>

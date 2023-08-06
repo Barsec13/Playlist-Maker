@@ -36,5 +36,25 @@
     <string name="nothing_playlist">Вы не создали ни одного плейлиста</string>
     <string name="new_playlist">Новый плейлист</string>
     <string name="favorite_track">Избранные треки</string>
-    <string name="playlist">Плейлисты</string>
+    <string name="playlist">Плейлист</string>
+    <string name="button_create">Создать</string>
+    <string name="name_playlist">Название*</string>
+    <string name="description_playlist">Описание</string>
+
+    <string name="dialog_exiting_playlist_creation">Завершить создание плейлиста?</string>
+    <string name="dialog_loss_of_data">Все несохраненные данные будут потеряны</string>
+    <string name="dialog_cancel">Отмена</string>
+    <string name="dialog_complete">Завершить</string>
+    <string name="created">создан</string>
+    <string name="rationale_permission">Разрешение на доступ к файлам необходим для выбора обложки альбома.</string>
+    <string name="denied_permanently_permission">Разрешение на доступ к файлам запрещено.
+        Для включения разрешения необходимо перейти в настройки.</string>
+    <string name="_0_tracks">0 треков</string>
+    <string name="_5_20_tracks">треков</string>
+    <string name="_1_track">трек</string>
+    <string name="_2_4_track">трека</string>
+    <string name="add_playlist">Добавить плейлист</string>
+
+    <string name="trackOnPlaylist">Трек уже добавлен в плейлист</string>
+    <string name="trackAddOnPlaylist">Трек добавлен в плейлист</string>
 </resources>

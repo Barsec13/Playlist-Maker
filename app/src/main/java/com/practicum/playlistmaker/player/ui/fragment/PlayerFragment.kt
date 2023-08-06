@@ -5,20 +5,29 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlayerBinding
+import com.practicum.playlistmaker.media_library.ui.models.PlaylistStateInterface
+import com.practicum.playlistmaker.new_playlist.domain.model.Playlist
 import com.practicum.playlistmaker.player.domain.model.Track
+import com.practicum.playlistmaker.player.ui.adapter.PlaylistAdapterBottomSheet
 import com.practicum.playlistmaker.player.ui.models.LikeStateInterface
 import com.practicum.playlistmaker.player.ui.models.PlayerStateInterface
+import com.practicum.playlistmaker.player.ui.models.TrackInPlaylistStateInterface
 import com.practicum.playlistmaker.player.ui.view_model.PlayerViewModel
 import com.practicum.playlistmaker.util.TimeUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -26,19 +35,26 @@ import org.koin.core.parameter.parametersOf
 
 class PlayerFragment : Fragment() {
     //Переменные
-    lateinit var buttonArrowBackSettings: androidx.appcompat.widget.Toolbar
-    lateinit var track: Track
-    lateinit var artworkUrl100: ImageView
-    lateinit var trackName: TextView
-    lateinit var artistName: TextView
-    lateinit var trackTime: TextView
-    lateinit var collectionName: TextView
-    lateinit var releaseDate: TextView
-    lateinit var primaryGenreName: TextView
-    lateinit var country: TextView
-    lateinit var duration: TextView
-    lateinit var buttonPlay: FloatingActionButton
-    lateinit var buttonLike: ImageView
+    private lateinit var buttonArrowBackSettings: androidx.appcompat.widget.Toolbar
+    private lateinit var track: Track
+    private lateinit var artworkUrl100: ImageView
+    private lateinit var trackName: TextView
+    private lateinit var artistName: TextView
+    private lateinit var trackTime: TextView
+    private lateinit var collectionName: TextView
+    private lateinit var releaseDate: TextView
+    private lateinit var primaryGenreName: TextView
+    private lateinit var country: TextView
+    private lateinit var duration: TextView
+    private lateinit var buttonPlay: FloatingActionButton
+    private lateinit var buttonLike: ImageView
+    private lateinit var bottomSheetContainer: LinearLayout
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+    private lateinit var buttonAddTrack: FloatingActionButton
+    private lateinit var recyclerViewBottomSheet: RecyclerView
+    private lateinit var buttonNewPlaylist: Button
+    private lateinit var overlay: View
+
 
     companion object {
         private const val SEND_TRACK_ID = "send_track_id"
@@ -52,6 +68,7 @@ class PlayerFragment : Fragment() {
         parametersOf(requireArguments().getInt(SEND_TRACK_ID))
     }
     private lateinit var binding: FragmentPlayerBinding
+    private lateinit var playlistAdapterBottomSheet: PlaylistAdapterBottomSheet
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -85,8 +102,36 @@ class PlayerFragment : Fragment() {
             renderLike(it)
         }
 
+        playerViewModel.observePlaylistState().observe(viewLifecycleOwner){track ->
+            renderPlaylists(track)
+        }
+
+        playerViewModel.observeTrackInPlaylistState().observe(viewLifecycleOwner){
+            state -> renderAddTrackToPlaylist(state)
+        }
+
+        initAdapter()
+
         //Listener
         setListeners()
+    }
+
+    private fun renderAddTrackToPlaylist(state: TrackInPlaylistStateInterface?) {
+        when(state){
+            is TrackInPlaylistStateInterface.TrackOnPlaylist ->{
+                showToast(getString(R.string.trackOnPlaylist))
+            }
+            is TrackInPlaylistStateInterface.TrackAddToPlaylist ->{
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                showToast(getString(R.string.trackAddOnPlaylist))}
+        }
+    }
+
+    private fun renderPlaylists(state: PlaylistStateInterface) {
+        when (state){
+            is PlaylistStateInterface.PlaylistsIsEmpty -> return
+            is PlaylistStateInterface.Playlists -> showPlaylists(state.playlists)
+        }
     }
 
     override fun onPause() {
@@ -100,6 +145,10 @@ class PlayerFragment : Fragment() {
 
     fun getInfoTrack(track: Track) {
         showDataTrack(track)
+    }
+
+    private fun showPlaylists(playlists: List<Playlist>) {
+        playlistAdapterBottomSheet.setPlaylists(playlists)
     }
 
     private fun render(state: PlayerStateInterface) {
@@ -150,6 +199,19 @@ class PlayerFragment : Fragment() {
         duration = binding.duration
         buttonPlay = binding.playTrack
         buttonLike = binding.likeTrack
+        buttonAddTrack = binding.buttonAddTrack
+        bottomSheetContainer = binding.bottomSheet
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+        recyclerViewBottomSheet = binding.recyclerPlaylist
+        buttonNewPlaylist = binding.buttonNewPlaylist
+        overlay = binding.overlay
+    }
+
+    private fun initAdapter(){
+        playlistAdapterBottomSheet = PlaylistAdapterBottomSheet(ArrayList<Playlist>())
+        recyclerViewBottomSheet.adapter = playlistAdapterBottomSheet
     }
 
     //Настроить Listeners
@@ -165,11 +227,48 @@ class PlayerFragment : Fragment() {
         buttonLike.setOnClickListener() {
             playerViewModel.onFavoriteClicked()
         }
+
+        buttonAddTrack.setOnClickListener(){
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback(){
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when(newState){
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        // загружаем рекламный баннер
+                        playerViewModel.showPlaylist()
+                        overlay.visibility = View.VISIBLE
+                    }
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        //overlay.visibility = View.GONE
+                    }
+                    else -> {}
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                overlay.alpha = slideOffset
+            }
+        })
+
+        buttonNewPlaylist.setOnClickListener(){
+            sendToNewPlaylist()
+        }
+
+        playlistAdapterBottomSheet.itemClickListener = {position, tracks, playlist ->
+            playerViewModel.onPlaylistClick(tracks, playlist)
+        }
+    }
+
+    private fun sendToNewPlaylist() {
+        findNavController().navigate(
+            R.id.action_playerFragment_to_newPlaylistFragment
+        )
     }
 
     private fun showDataTrack(track: Track) {
         // Ссылка на пробный кусок песни
-        //previewUrl = track.previewUrl
         trackName.text = track.trackName
         artistName.text = track.artistName
         trackTime.text = TimeUtils.formatTrackDuraction(track.trackTimeMillis.toInt())
@@ -186,5 +285,10 @@ class PlayerFragment : Fragment() {
             .centerCrop()
             .transform(RoundedCorners(roundingRadius))
             .into(artworkUrl100)
+    }
+
+    private fun showToast(messageToast: String) {
+        val toast = Toast.makeText(requireContext(), messageToast, Toast.LENGTH_LONG)
+        toast.show()
     }
 }
