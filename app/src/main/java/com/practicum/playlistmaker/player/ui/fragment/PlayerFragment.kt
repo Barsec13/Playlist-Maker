@@ -119,11 +119,11 @@ class PlayerFragment : Fragment() {
     private fun renderAddTrackToPlaylist(state: TrackInPlaylistStateInterface?) {
         when(state){
             is TrackInPlaylistStateInterface.TrackOnPlaylist ->{
-                showToast(getString(R.string.trackOnPlaylist))
+                showToast(getString(R.string.trackOnPlaylist) + " " + state.namePlaylist)
             }
             is TrackInPlaylistStateInterface.TrackAddToPlaylist ->{
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                showToast(getString(R.string.trackAddOnPlaylist))}
+                showToast(getString(R.string.trackAddOnPlaylist) + " " + state.namePlaylist)}
         }
     }
 
@@ -236,19 +236,18 @@ class PlayerFragment : Fragment() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when(newState){
                     BottomSheetBehavior.STATE_COLLAPSED -> {
-                        // загружаем рекламный баннер
                         playerViewModel.showPlaylist()
                         overlay.visibility = View.VISIBLE
                     }
                     BottomSheetBehavior.STATE_HIDDEN -> {
-                        //overlay.visibility = View.GONE
+                        overlay.visibility = View.GONE
                     }
                     else -> {}
                 }
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                overlay.alpha = slideOffset
+                //overlay.alpha = slideOffset
             }
         })
 

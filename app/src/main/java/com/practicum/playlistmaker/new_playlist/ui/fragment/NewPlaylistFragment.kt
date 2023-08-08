@@ -2,13 +2,9 @@ package com.practicum.playlistmaker.new_playlist.ui.fragment
 
 import android.Manifest
 import android.content.ContentResolver
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -21,7 +17,6 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -33,12 +28,9 @@ import com.markodevcic.peko.PermissionRequester
 import com.markodevcic.peko.PermissionResult
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentNewPlaylistBinding
-import com.practicum.playlistmaker.new_playlist.domain.model.Playlist
 import com.practicum.playlistmaker.new_playlist.ui.view_model.NewPlaylistViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.File
-import java.io.FileOutputStream
 
 class NewPlaylistFragment() : Fragment() {
     private lateinit var buttonArrowBackSettings: androidx.appcompat.widget.Toolbar
@@ -49,12 +41,12 @@ class NewPlaylistFragment() : Fragment() {
     private lateinit var descriptionPlaylist: TextInputLayout
     private lateinit var buttonCreateNewPlaylist: AppCompatButton
     private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
-    private lateinit var uriCover: Uri
     private lateinit var contentResolver: ContentResolver
     private lateinit var confirmDialog: MaterialAlertDialogBuilder
     private lateinit var oldCoverDrawable: Drawable
 
     private val newPlaylistViewModel: NewPlaylistViewModel by viewModel()
+
     private lateinit var binding: FragmentNewPlaylistBinding
 
     override fun onCreateView(
@@ -74,6 +66,12 @@ class NewPlaylistFragment() : Fragment() {
         initViews()
 
         setListeners()
+
+        newPlaylistViewModel.observeStateCover().observe(viewLifecycleOwner) {
+            coverPlaylist.setImageURI(it)
+        }
+
+        newPlaylistViewModel.showCover()
     }
 
     private fun initViews() {
@@ -88,7 +86,7 @@ class NewPlaylistFragment() : Fragment() {
         pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { Uri ->
             if (Uri != null) {
                 coverPlaylist.setImageURI(Uri)
-                uriCover = Uri
+                newPlaylistViewModel.saveUriImage(Uri)
             }
         }
 
@@ -101,13 +99,6 @@ class NewPlaylistFragment() : Fragment() {
             }
 
         oldCoverDrawable = coverPlaylist.drawable
-
-        uriCover = Uri.parse(
-            ContentResolver.SCHEME_ANDROID_RESOURCE
-                    + "://" + requireContext().resources.getResourcePackageName(R.drawable.ic_placeholder)
-                    + '/' + requireContext().resources.getResourceTypeName(R.drawable.ic_placeholder)
-                    + '/' + requireContext().resources.getResourceEntryName(R.drawable.ic_placeholder)
-        )
     }
 
     private fun setListeners() {
@@ -117,9 +108,7 @@ class NewPlaylistFragment() : Fragment() {
                 || oldCoverDrawable != coverPlaylist.drawable
             ) {
                 confirmDialog.show()
-            }
-
-            exit()
+            } else exit()
         }
 
         namePlaylistText.addTextChangedListener(object : TextWatcher {
@@ -134,7 +123,7 @@ class NewPlaylistFragment() : Fragment() {
                     )
                 )
                 namePlaylist.defaultHintTextColor =
-                    resources.getColorStateList(R.color.text_input, null)
+                    ContextCompat.getColorStateList(requireContext(), R.color.text_input)
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -146,8 +135,9 @@ class NewPlaylistFragment() : Fragment() {
                             null
                         )
                     )
+
                     namePlaylist.defaultHintTextColor =
-                        resources.getColorStateList(R.color.text_not, null)
+                        ContextCompat.getColorStateList(requireContext(), R.color.text_not)
                 }
             }
         })
@@ -187,45 +177,18 @@ class NewPlaylistFragment() : Fragment() {
         buttonCreateNewPlaylist.setOnClickListener() {
 
             if (oldCoverDrawable != coverPlaylist.drawable) {
-                saveImageToPrivateStorage(uriCover, namePlaylistText.text.toString())
+                newPlaylistViewModel.saveImage(namePlaylistText.text.toString())
             }
 
             newPlaylistViewModel.createPlaylistClicked(
-                Playlist(
-                    id = 0,
-                    playListName = namePlaylistText.text.toString(),
-                    playlistDescription = descriptionPlaylistText.text.toString(),
-                    uriCover = uriCover,
-                )
+                namePlaylistText.text.toString(), descriptionPlaylistText.text.toString()
             )
-
 
             showMessageCreatePlaylist()
 
             exit()
         }
     }
-
-    private fun saveImageToPrivateStorage(uri: Uri, albumName: String) {
-        val filePath = File(
-            requireActivity()
-                .getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-            "album_Cover_Playlist"
-        )
-        if (!filePath.exists()) {
-            filePath.mkdirs()
-        }
-        val file = File(filePath, "cover_$albumName.jpg")
-        val inputStream = requireActivity().contentResolver.openInputStream(uri)
-        val outputStream = FileOutputStream(file)
-
-        BitmapFactory
-            .decodeStream(inputStream)
-            .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
-
-        uriCover = file.toUri()
-    }
-
 
     private fun exit() {
         findNavController().navigateUp()

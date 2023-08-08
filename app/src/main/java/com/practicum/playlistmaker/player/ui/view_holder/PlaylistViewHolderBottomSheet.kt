@@ -18,7 +18,7 @@ class PlaylistViewHolderBottomSheet(parentView: ViewGroup) : RecyclerView.ViewHo
     private val countTracks: TextView = itemView.findViewById(R.id.count_tracks)
 
     fun bind(model: Playlist) {
-        coverPlaylist.setImageURI(model.uriCover)
+        if (!model.uriCover.toString().isNullOrEmpty()) coverPlaylist.setImageURI(model.uriCover)
         namePlaylist.text = model.playListName
         val quantityTracks = model.quantityTracks
         countTracks.text = quantityTracks.toString() + " " + GetWordTrack.getWordTrack(quantityTracks, itemView)

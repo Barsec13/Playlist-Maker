@@ -34,23 +34,35 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <ImageView
-        android:id="@+id/cover_playlist"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cover_playlist_cardview"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/margin_media"
         android:layout_marginEnd="@dimen/margin_media"
-        android:contentDescription="@string/artwork"
-        android:scaleType="centerCrop"
-        android:src="@drawable/placeholder_cover_playlist"
-        android:background="@drawable/frame_dotted_rectangle"
+        app:cardBackgroundColor="?attr/colorSecondary"
+        app:cardElevation="0dp"
+        app:cardCornerRadius="8dp"
         app:layout_constraintBottom_toTopOf="@id/name_playlist"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="@id/right_guideline"
         android:layout_gravity="center_horizontal"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@id/toolbarSetting"/>
+        app:layout_constraintTop_toBottomOf="@id/toolbarSetting"
+        android:layout_marginTop="@dimen/margin_bottom_24"
+        app:cardPreventCornerOverlap="false">
+
+        <ImageView
+            android:id="@+id/cover_playlist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/artwork"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder_cover_playlist"
+            android:background="@drawable/frame_dotted_rectangle"/>
+
+    </androidx.cardview.widget.CardView>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/name_playlist"
@@ -58,11 +70,11 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
-        app:layout_constraintTop_toBottomOf="@id/cover_playlist"
+        app:layout_constraintTop_toBottomOf="@id/cover_playlist_cardview"
         app:layout_constraintVertical_bias="0.0"
         android:layout_marginTop="32dp"
         android:hint="Название*"
-        android:textColorHint="@color/text_not"
+        app:hintTextColor="@color/text_not"
         app:boxStrokeColor="@color/text_not_box_stroke"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -88,7 +100,7 @@
         app:layout_constraintVertical_bias="0.0"
         android:layout_marginTop="@dimen/margin_16"
         android:hint="Описание"
-        android:textColorHint="@color/text_not"
+        app:hintTextColor="@color/text_not"
         app:boxStrokeColor="@color/text_not_box_stroke"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 

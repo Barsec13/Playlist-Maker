@@ -53,8 +53,8 @@
     <string name="_5_20_tracks">треков</string>
     <string name="_1_track">трек</string>
     <string name="_2_4_track">трека</string>
-    <string name="add_playlist">Добавить плейлист</string>
+    <string name="add_playlist">Добавить в плейлист</string>
 
     <string name="trackOnPlaylist">Трек уже добавлен в плейлист</string>
-    <string name="trackAddOnPlaylist">Трек добавлен в плейлист</string>
+    <string name="trackAddOnPlaylist">Добавлено в плейлист</string>
 </resources>

@@ -2,7 +2,7 @@ package com.practicum.playlistmaker.player.ui.models
 
 interface TrackInPlaylistStateInterface {
 
-    object TrackOnPlaylist : TrackInPlaylistStateInterface
+    data class TrackOnPlaylist(val namePlaylist: String) : TrackInPlaylistStateInterface
 
-    object TrackAddToPlaylist : TrackInPlaylistStateInterface
+    data class TrackAddToPlaylist(val namePlaylist: String) : TrackInPlaylistStateInterface
 }

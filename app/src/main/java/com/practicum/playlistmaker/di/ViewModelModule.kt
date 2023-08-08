@@ -41,6 +41,8 @@ val viewModelModule = module {
     }
 
     viewModel{
-        NewPlaylistViewModel(playlistInteractor = get())
+        NewPlaylistViewModel(playlistInteractor = get(),
+            newPlaylistInteractor = get()
+        )
     }
 }

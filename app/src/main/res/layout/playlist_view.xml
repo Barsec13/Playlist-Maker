@@ -24,7 +24,8 @@
             android:layout_width="160dp"
             android:layout_height="160dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_placeholder"/>
+            android:src="@drawable/ic_placeholder_512x512"
+            android:background="?attr/colorSecondary"/>
     </androidx.cardview.widget.CardView>
 
         <TextView

@@ -200,7 +200,7 @@ class PlayerViewModel(
 
     fun onPlaylistClick(tracksId: List<Int>, playlist: Playlist) {
         if (sendTrack!!.trackId in tracksId) {
-            trackInPlaylistState.postValue(TrackInPlaylistStateInterface.TrackOnPlaylist)
+            trackInPlaylistState.postValue(TrackInPlaylistStateInterface.TrackOnPlaylist(playlist.playListName))
         } else {
             viewModelScope.launch {
                 playlistInteractor.insertTrackInPlaylist(
@@ -209,7 +209,7 @@ class PlayerViewModel(
                     tracksId
                 )
             }
-            trackInPlaylistState.postValue(TrackInPlaylistStateInterface.TrackAddToPlaylist)
+            trackInPlaylistState.postValue(TrackInPlaylistStateInterface.TrackAddToPlaylist(playlist.playListName))
         }
     }
 }

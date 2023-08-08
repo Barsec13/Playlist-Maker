@@ -19,5 +19,6 @@
         <item name="item_menu">@color/white</item>
         <item name="snackbar">@color/white</item>
         <item name="snackbar_text">@color/black</item>
+        <item name="hint">@color/blue</item>
     </style>
 </resources>
