@@ -50,14 +50,14 @@ class PlayerViewModel(
     private val trackStateLiveData = MutableLiveData<Track>()
     private val isFavoriteStateLiveData = MutableLiveData<LikeStateInterface>()
     private val playlistStateLiveData = MutableLiveData<PlaylistStateInterface>()
-    private val trackInPlaylistState = MutableLiveData<TrackInPlaylistStateInterface>()
+    private val trackInPlaylistState = MutableLiveData<TrackInPlaylistStateInterface?>()
     fun observePlayerState(): LiveData<PlayerStateInterface> = playerStateLiveData
     fun observerTimerState(): LiveData<String> = timerLiveData
     fun observeTrackState(): LiveData<Track> = trackStateLiveData
     fun observeIsFavoriteState(): LiveData<LikeStateInterface> = isFavoriteStateLiveData
 
     fun observePlaylistState(): LiveData<PlaylistStateInterface> = playlistStateLiveData
-    fun observeTrackInPlaylistState(): LiveData<TrackInPlaylistStateInterface> =
+    fun observeTrackInPlaylistState(): LiveData<TrackInPlaylistStateInterface?> =
         trackInPlaylistState
 
     override fun onCleared() {
@@ -211,5 +211,9 @@ class PlayerViewModel(
             }
             trackInPlaylistState.postValue(TrackInPlaylistStateInterface.TrackAddToPlaylist(playlist.playListName))
         }
+    }
+
+    fun eraseState() {
+        trackInPlaylistState.postValue(null)
     }
 }

@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.player.ui.fragment
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -79,7 +77,6 @@ class PlayerFragment : Fragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -137,6 +134,7 @@ class PlayerFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         playerViewModel.activityPause()
+        playerViewModel.eraseState()
     }
 
     override fun onDestroy() {

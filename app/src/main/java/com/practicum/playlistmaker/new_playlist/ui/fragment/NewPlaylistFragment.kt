@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -102,13 +103,16 @@ class NewPlaylistFragment() : Fragment() {
     }
 
     private fun setListeners() {
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                checkFillingField()
+            }
+        })
+
         buttonArrowBackSettings.setOnClickListener() {
-            if (!namePlaylistText.text.isNullOrEmpty()
-                || !descriptionPlaylistText.text.isNullOrEmpty()
-                || oldCoverDrawable != coverPlaylist.drawable
-            ) {
-                confirmDialog.show()
-            } else exit()
+            checkFillingField()
         }
 
         namePlaylistText.addTextChangedListener(object : TextWatcher {
@@ -247,5 +251,14 @@ class NewPlaylistFragment() : Fragment() {
     private fun showToast(messageToast: String) {
         val toast = Toast.makeText(requireContext(), messageToast, Toast.LENGTH_LONG)
         toast.show()
+    }
+
+    private fun checkFillingField() {
+        if (!namePlaylistText.text.isNullOrEmpty()
+            || !descriptionPlaylistText.text.isNullOrEmpty()
+            || oldCoverDrawable != coverPlaylist.drawable
+        ) {
+            confirmDialog.show()
+        } else exit()
     }
 }
