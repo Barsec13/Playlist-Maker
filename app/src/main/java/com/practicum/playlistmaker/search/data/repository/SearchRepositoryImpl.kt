@@ -15,7 +15,7 @@ class SearchRepositoryImpl(
 ) : SearchRepository {
     override fun loadTracks(searchText: String): Flow<ResultLoadTracks> = flow {
         val resultLoadTracks = networkClient.loadTracks(searchText = searchText)
-        val idFavoriteTracks = appDataBase.trackDao().getIdFavoriteTrack()
+        val idFavoriteTracks = appDataBase.favoriteTrackDao().getIdFavoriteTrack()
 
         if (resultLoadTracks is ResultLoadTracks.OnSuccess) {
             resultLoadTracks.data =

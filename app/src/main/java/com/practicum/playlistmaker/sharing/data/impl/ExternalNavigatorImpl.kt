@@ -20,29 +20,42 @@ class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
 
 
     override fun shareLink() {
-        context.startActivity(
-            Intent(Intent.ACTION_SEND).apply {
-                type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, linkToTheCourse)
-                setFlags(FLAG_ACTIVITY_NEW_TASK)
-            })
+        try {
+            context.startActivity(
+                Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, linkToTheCourse)
+                    setFlags(FLAG_ACTIVITY_NEW_TASK)
+                })
+        }
+
+        catch (_: Exception){ }
+
     }
 
     override fun openLink() {
-        val uriUserAgreement = Uri.parse(linkToTheOffer)
-        context.startActivity(
-            Intent(Intent.ACTION_VIEW, uriUserAgreement).setFlags(FLAG_ACTIVITY_NEW_TASK)
-        )
+        try {
+            val uriUserAgreement = Uri.parse(linkToTheOffer)
+            context.startActivity(
+                Intent(Intent.ACTION_VIEW, uriUserAgreement).setFlags(FLAG_ACTIVITY_NEW_TASK)
+            )
+        }
+
+        catch (_: Exception){ }
     }
 
     override fun openEmail() {
-        context.startActivity(
-            Intent(Intent.ACTION_SENDTO).apply {
-            data = Uri.parse(emailData.mailto)
-            putExtra(Intent.EXTRA_EMAIL, emailData.emailDeveloper)
-            putExtra(Intent.EXTRA_SUBJECT, subject)
-            putExtra(Intent.EXTRA_TEXT, message)
-            setFlags(FLAG_ACTIVITY_NEW_TASK)
-        })
+        try{
+            context.startActivity(
+                Intent(Intent.ACTION_SENDTO).apply {
+                    data = Uri.parse(emailData.mailto)
+                    putExtra(Intent.EXTRA_EMAIL, emailData.emailDeveloper)
+                    putExtra(Intent.EXTRA_SUBJECT, subject)
+                    putExtra(Intent.EXTRA_TEXT, message)
+                    setFlags(FLAG_ACTIVITY_NEW_TASK)
+                })
+        }
+
+        catch (_: Exception){ }
     }
 }

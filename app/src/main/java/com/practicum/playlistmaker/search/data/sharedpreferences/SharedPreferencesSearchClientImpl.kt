@@ -49,7 +49,7 @@ class SharedPreferencesSearchClientImpl(
         var tracksHistory =
             gson.fromJson<ArrayList<Track>>(jsonHistoryTracks, typeTokenArrayList)
 
-        val idFavoriteTracks = appDataBase.trackDao().getIdFavoriteTrack()
+        val idFavoriteTracks = appDataBase.favoriteTrackDao().getIdFavoriteTrack()
 
         tracksHistory = CheckTrackInFavorites.checkTrackInFavorites(
             tracksHistory,

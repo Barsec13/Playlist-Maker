@@ -33,4 +33,5 @@
     <dimen name="margin_bottom_24">24dp</dimen>
     <dimen name="margin_bottom_12">12dp</dimen>
     <dimen name="sizeProgressBar">44dp</dimen>
+    <dimen name="constraintGuide_16">16dp</dimen>
 </resources>

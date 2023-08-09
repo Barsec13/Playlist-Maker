@@ -1,7 +1,11 @@
 package com.practicum.playlistmaker.di
 
 import com.practicum.playlistmaker.db.domain.api.FavoriteTrackInteractor
+import com.practicum.playlistmaker.db.domain.api.PlaylistInteractor
 import com.practicum.playlistmaker.db.domain.impl.FavoriteTrackInteractorImpl
+import com.practicum.playlistmaker.db.domain.impl.PlaylistInteractorImpl
+import com.practicum.playlistmaker.new_playlist.domain.api.NewPlaylistInteractor
+import com.practicum.playlistmaker.new_playlist.domain.impl.NewPlaylistInteractorImpl
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.impl.PlayerInteractorImpl
 import com.practicum.playlistmaker.search.domain.api.SearchInteractor
@@ -36,5 +40,13 @@ val interactorModule = module {
 
     single<FavoriteTrackInteractor> {
         FavoriteTrackInteractorImpl(favoriteTrackRepository = get())
+    }
+
+    single<PlaylistInteractor> {
+        PlaylistInteractorImpl(playListRepository = get())
+    }
+
+    single<NewPlaylistInteractor> {
+        NewPlaylistInteractorImpl(newPlaylistRepository = get())
     }
 }

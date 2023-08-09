@@ -5,4 +5,7 @@
     <attr name="edit_text" format="reference"/>
     <attr name="button_media" format="reference"/>
     <attr name="item_menu" format="reference"/>
+    <attr name="snackbar" format="reference"/>
+    <attr name="snackbar_text" format="reference"/>
+    <attr name="hint" format="reference"/>
 </resources>

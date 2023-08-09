@@ -1,14 +1,14 @@
 package com.practicum.playlistmaker.db.data.converter
 
 import android.annotation.SuppressLint
-import com.practicum.playlistmaker.db.data.entity.TrackEntity
+import com.practicum.playlistmaker.db.data.entity.FavoriteTrackEntity
 import com.practicum.playlistmaker.player.domain.model.Track
 import java.text.SimpleDateFormat
 import java.util.Date
 
 class TrackDbConverter {
-    fun map(track: Track): TrackEntity {
-        return TrackEntity(
+    fun map(track: Track): FavoriteTrackEntity {
+        return FavoriteTrackEntity(
             track.trackId,
             track.trackName,
             track.artistName,
@@ -23,18 +23,18 @@ class TrackDbConverter {
         )
     }
 
-    fun map(trackEntity: TrackEntity): Track {
+    fun map(favoriteTrackEntity: FavoriteTrackEntity): Track {
         return Track(
-            trackEntity.id,
-            trackEntity.trackName,
-            trackEntity.artistName,
-            trackEntity.trackTimeMillis,
-            trackEntity.artworkUrl100,
-            trackEntity.collectionName,
-            trackEntity.releaseDate,
-            trackEntity.primaryGenreName,
-            trackEntity.country,
-            trackEntity.previewUrl,
+            favoriteTrackEntity.id,
+            favoriteTrackEntity.trackName,
+            favoriteTrackEntity.artistName,
+            favoriteTrackEntity.trackTimeMillis,
+            favoriteTrackEntity.artworkUrl100,
+            favoriteTrackEntity.collectionName,
+            favoriteTrackEntity.releaseDate,
+            favoriteTrackEntity.primaryGenreName,
+            favoriteTrackEntity.country,
+            favoriteTrackEntity.previewUrl,
         )
     }
 
