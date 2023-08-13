@@ -10,6 +10,7 @@ class TrackAdapter(
 ) : RecyclerView.Adapter<TrackViewHolder>() {
 
     var itemClickListener: ((Int, Track) -> Unit)? = null
+    var itemLongClickListener: ((Int, Track) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         return TrackViewHolder(parent)
@@ -20,6 +21,10 @@ class TrackAdapter(
         holder.bind(track)
         holder.itemView.setOnClickListener() {
             itemClickListener?.invoke(position, track)
+        }
+        holder.itemView.setOnLongClickListener(){
+            itemLongClickListener?.invoke(position, track)
+            return@setOnLongClickListener true
         }
     }
 

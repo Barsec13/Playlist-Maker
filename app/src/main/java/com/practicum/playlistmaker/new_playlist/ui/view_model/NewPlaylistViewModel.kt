@@ -6,25 +6,25 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.practicum.playlistmaker.db.domain.api.PlaylistInteractor
+import com.practicum.playlistmaker.db.domain.api.PlaylistDbInteractor
 import com.practicum.playlistmaker.new_playlist.domain.api.NewPlaylistInteractor
 import com.practicum.playlistmaker.new_playlist.domain.model.Playlist
 import kotlinx.coroutines.launch
 
-class NewPlaylistViewModel(
-    private val playlistInteractor: PlaylistInteractor,
+open class NewPlaylistViewModel(
+    private val playlistDbInteractor: PlaylistDbInteractor,
     private val newPlaylistInteractor: NewPlaylistInteractor,
 ) : ViewModel() {
 
     private val coverLiveData = MutableLiveData<Uri>()
     fun observeStateCover(): LiveData<Uri> = coverLiveData
 
-    private var uriCover: Uri = "".toUri()
+    open var uriCover: Uri = "".toUri()
 
 
     fun createPlaylistClicked(playlistName: String, playlistDescription: String) {
         viewModelScope.launch {
-            playlistInteractor.insertPlaylist(
+            playlistDbInteractor.insertPlaylist(
                 Playlist(
                     id = 0,
                     playListName = playlistName,

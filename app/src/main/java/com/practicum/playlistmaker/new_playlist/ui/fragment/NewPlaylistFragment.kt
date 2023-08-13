@@ -33,20 +33,20 @@ import com.practicum.playlistmaker.new_playlist.ui.view_model.NewPlaylistViewMod
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class NewPlaylistFragment() : Fragment() {
-    private lateinit var buttonArrowBackSettings: androidx.appcompat.widget.Toolbar
-    private lateinit var coverPlaylist: ImageView
-    private lateinit var namePlaylistText: TextInputEditText
-    private lateinit var descriptionPlaylistText: TextInputEditText
+open class NewPlaylistFragment() : Fragment() {
+    open lateinit var buttonArrowBack: androidx.appcompat.widget.Toolbar
+    open lateinit var coverPlaylist: ImageView
+    open lateinit var namePlaylistText: TextInputEditText
+    open lateinit var descriptionPlaylistText: TextInputEditText
     private lateinit var namePlaylist: TextInputLayout
     private lateinit var descriptionPlaylist: TextInputLayout
-    private lateinit var buttonCreateNewPlaylist: AppCompatButton
+    open lateinit var buttonCreateNewPlaylist: AppCompatButton
     private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
     private lateinit var contentResolver: ContentResolver
     private lateinit var confirmDialog: MaterialAlertDialogBuilder
-    private lateinit var oldCoverDrawable: Drawable
+    open lateinit var oldCoverDrawable: Drawable
 
-    private val newPlaylistViewModel: NewPlaylistViewModel by viewModel()
+    open val viewModelPlaylist: NewPlaylistViewModel by viewModel()
 
     private lateinit var binding: FragmentNewPlaylistBinding
 
@@ -68,15 +68,15 @@ class NewPlaylistFragment() : Fragment() {
 
         setListeners()
 
-        newPlaylistViewModel.observeStateCover().observe(viewLifecycleOwner) {
+        viewModelPlaylist.observeStateCover().observe(viewLifecycleOwner) {
             coverPlaylist.setImageURI(it)
         }
 
-        newPlaylistViewModel.showCover()
+        viewModelPlaylist.showCover()
     }
 
     private fun initViews() {
-        buttonArrowBackSettings = binding.toolbarSetting
+        buttonArrowBack = binding.toolbarSetting
         coverPlaylist = binding.coverPlaylist
         namePlaylistText = binding.textNamePlaylist
         descriptionPlaylistText = binding.textDescriptionPlaylist
@@ -87,7 +87,7 @@ class NewPlaylistFragment() : Fragment() {
         pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { Uri ->
             if (Uri != null) {
                 coverPlaylist.setImageURI(Uri)
-                newPlaylistViewModel.saveUriImage(Uri)
+                viewModelPlaylist.saveUriImage(Uri)
             }
         }
 
@@ -111,7 +111,7 @@ class NewPlaylistFragment() : Fragment() {
             }
         })
 
-        buttonArrowBackSettings.setOnClickListener() {
+        buttonArrowBack.setOnClickListener() {
             checkFillingField()
         }
 
@@ -181,10 +181,10 @@ class NewPlaylistFragment() : Fragment() {
         buttonCreateNewPlaylist.setOnClickListener() {
 
             if (oldCoverDrawable != coverPlaylist.drawable) {
-                newPlaylistViewModel.saveImage(namePlaylistText.text.toString())
+                viewModelPlaylist.saveImage(namePlaylistText.text.toString())
             }
 
-            newPlaylistViewModel.createPlaylistClicked(
+            viewModelPlaylist.createPlaylistClicked(
                 namePlaylistText.text.toString(), descriptionPlaylistText.text.toString()
             )
 
