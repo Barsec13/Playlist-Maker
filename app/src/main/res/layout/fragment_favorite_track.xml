@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="?attr/colorSecondary"
-    tools:context="com.practicum.playlistmaker.media_library.ui.fragment.FavoriteTrackFragment">
+    tools:context="com.practicum.playlistmaker.medialibrary.ui.fragment.FavoriteTrackFragment">
 
     <LinearLayout
         android:id="@+id/placeholderNothingWasFound"

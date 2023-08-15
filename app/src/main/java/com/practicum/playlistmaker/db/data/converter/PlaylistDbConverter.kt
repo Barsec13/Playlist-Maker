@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import androidx.core.net.toUri
 import com.practicum.playlistmaker.db.data.entity.PlaylistEntity
 import com.practicum.playlistmaker.db.data.entity.TrackInPlaylistEntity
-import com.practicum.playlistmaker.new_playlist.domain.model.Playlist
+import com.practicum.playlistmaker.newplaylist.domain.model.Playlist
 import com.practicum.playlistmaker.player.domain.model.Track
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -39,6 +39,7 @@ class PlaylistDbConverter {
             trackInPlaylistEntity.artistName,
             trackInPlaylistEntity.trackTimeMillis,
             trackInPlaylistEntity.artworkUrl100,
+            trackInPlaylistEntity.artworkUrl60,
             trackInPlaylistEntity.collectionName,
             trackInPlaylistEntity.releaseDate,
             trackInPlaylistEntity.primaryGenreName,
@@ -54,6 +55,7 @@ class PlaylistDbConverter {
             track.artistName,
             track.trackTimeMillis,
             track.artworkUrl100,
+            track.artworkUrl60,
             track.collectionName,
             track.releaseDate,
             track.primaryGenreName,

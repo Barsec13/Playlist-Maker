@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.practicum.playlistmaker.new_playlist.domain.model.Playlist
+import com.practicum.playlistmaker.newplaylist.domain.model.Playlist
 import com.practicum.playlistmaker.player.ui.view_holder.PlaylistViewHolderBottomSheet
 
 class PlaylistAdapterBottomSheet(

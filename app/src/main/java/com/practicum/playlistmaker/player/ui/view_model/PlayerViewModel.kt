@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.db.domain.api.FavoriteTrackInteractor
 import com.practicum.playlistmaker.db.domain.api.PlaylistDbInteractor
-import com.practicum.playlistmaker.media_library.ui.models.PlaylistsStateInterface
-import com.practicum.playlistmaker.new_playlist.domain.model.Playlist
+import com.practicum.playlistmaker.medialibrary.ui.models.PlaylistsStateInterface
+import com.practicum.playlistmaker.newplaylist.domain.model.Playlist
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.model.PlayerState
 import com.practicum.playlistmaker.player.domain.model.Track

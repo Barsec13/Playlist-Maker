@@ -73,4 +73,6 @@
     <string name="delete_playlist">Удалить плейлист</string>
     <string name="save">Сохранить</string>
     <string name="edit">Редактировать</string>
+    <string name="name_playlist_newplaylist">Название*</string>
+    <string name="description_playlist_newplaylist">Описание</string>
 </resources>

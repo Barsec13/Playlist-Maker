@@ -14,6 +14,7 @@ class TrackDbConverter {
             track.artistName,
             track.trackTimeMillis,
             track.artworkUrl100,
+            track.artworkUrl60,
             track.collectionName,
             track.releaseDate,
             track.primaryGenreName,
@@ -30,11 +31,13 @@ class TrackDbConverter {
             favoriteTrackEntity.artistName,
             favoriteTrackEntity.trackTimeMillis,
             favoriteTrackEntity.artworkUrl100,
+            favoriteTrackEntity.artworkUrl60,
             favoriteTrackEntity.collectionName,
             favoriteTrackEntity.releaseDate,
             favoriteTrackEntity.primaryGenreName,
             favoriteTrackEntity.country,
             favoriteTrackEntity.previewUrl,
+
         )
     }
 

@@ -6,8 +6,8 @@ import com.practicum.playlistmaker.db.data.impl.FavoriteTrackRepositoryImpl
 import com.practicum.playlistmaker.db.data.impl.PlayListDbRepositoryImpl
 import com.practicum.playlistmaker.db.domain.api.FavoriteTrackRepository
 import com.practicum.playlistmaker.db.domain.api.PlayListDbRepository
-import com.practicum.playlistmaker.new_playlist.data.repository.NewPlaylistsRepositoryImpl
-import com.practicum.playlistmaker.new_playlist.domain.api.NewPlaylistsRepository
+import com.practicum.playlistmaker.newplaylist.data.repository.NewPlaylistsRepositoryImpl
+import com.practicum.playlistmaker.newplaylist.domain.api.NewPlaylistsRepository
 import com.practicum.playlistmaker.player.data.impl.TrackPlayerImpl
 import com.practicum.playlistmaker.player.data.repository.PlayerRepositoryImpl
 import com.practicum.playlistmaker.player.domain.api.PlayerRepository

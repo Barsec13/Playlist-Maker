@@ -6,13 +6,13 @@ import com.practicum.playlistmaker.player.domain.model.Track
 import com.practicum.playlistmaker.search.ui.view_holder.TrackViewHolder
 
 class TrackHistoryAdapter(
-    private var tracksHistory: ArrayList<Track>,
+    private var tracksHistory: ArrayList<Track>, private val resolution: String,
 ) : RecyclerView.Adapter<TrackViewHolder>() {
 
     var itemClickListener: ((Int, Track) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        return TrackViewHolder(parent)
+        return TrackViewHolder(parent, resolution)
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {

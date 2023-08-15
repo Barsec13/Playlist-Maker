@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:context="com.practicum.playlistmaker.media_library.ui.fragment.PlaylistsFragment">
+            tools:context="com.practicum.playlistmaker.medialibrary.ui.fragment.PlaylistsFragment">
 
             <ImageView
                 android:layout_width="wrap_content"

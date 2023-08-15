@@ -2,7 +2,7 @@ package com.practicum.playlistmaker.db.domain.impl
 
 import com.practicum.playlistmaker.db.domain.api.PlayListDbRepository
 import com.practicum.playlistmaker.db.domain.api.PlaylistDbInteractor
-import com.practicum.playlistmaker.new_playlist.domain.model.Playlist
+import com.practicum.playlistmaker.newplaylist.domain.model.Playlist
 import com.practicum.playlistmaker.player.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 

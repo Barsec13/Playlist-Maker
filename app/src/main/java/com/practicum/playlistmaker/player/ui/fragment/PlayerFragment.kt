@@ -19,8 +19,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlayerBinding
-import com.practicum.playlistmaker.media_library.ui.models.PlaylistsStateInterface
-import com.practicum.playlistmaker.new_playlist.domain.model.Playlist
+import com.practicum.playlistmaker.medialibrary.ui.models.PlaylistsStateInterface
+import com.practicum.playlistmaker.newplaylist.domain.model.Playlist
 import com.practicum.playlistmaker.player.domain.model.Track
 import com.practicum.playlistmaker.player.ui.adapter.PlaylistAdapterBottomSheet
 import com.practicum.playlistmaker.player.ui.models.LikeStateInterface

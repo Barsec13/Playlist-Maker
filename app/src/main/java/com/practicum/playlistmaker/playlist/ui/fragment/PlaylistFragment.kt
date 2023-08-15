@@ -18,8 +18,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlaylistBinding
 import com.practicum.playlistmaker.databinding.PlaylistViewOnPlayerBinding
-import com.practicum.playlistmaker.edit_playlist.ui.fragment.EditPlaylistFragment
-import com.practicum.playlistmaker.new_playlist.domain.model.Playlist
+import com.practicum.playlistmaker.editplaylist.ui.fragment.EditPlaylistFragment
+import com.practicum.playlistmaker.newplaylist.domain.model.Playlist
 import com.practicum.playlistmaker.player.domain.model.Track
 import com.practicum.playlistmaker.player.ui.fragment.PlayerFragment
 import com.practicum.playlistmaker.playlist.ui.models.SharePlaylistStateInterface
@@ -93,6 +93,16 @@ class PlaylistFragment : Fragment() {
         viewModel.getPlaylist()
     }
 
+    override fun onPause() {
+        super.onPause()
+        bottomSheetBehaviorMore.state = BottomSheetBehavior.STATE_HIDDEN
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        bottomSheetBehaviorMore.state = BottomSheetBehavior.STATE_HIDDEN
+    }
+
     private fun setObserve() {
         viewModel.observeStatePlaylist().observe(viewLifecycleOwner) { playlist ->
             showPlaylist(playlist)
@@ -123,7 +133,7 @@ class PlaylistFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        tracksAdapterBottomSheet = TrackAdapter(ArrayList<Track>())
+        tracksAdapterBottomSheet = TrackAdapter(ArrayList<Track>(), TrackAdapter.LOW_RESOLUTION)
         recyclerViewBottomSheet.adapter = tracksAdapterBottomSheet
     }
 
@@ -161,6 +171,7 @@ class PlaylistFragment : Fragment() {
 
         more.setOnClickListener(){
             bottomSheetBehaviorMore.state = BottomSheetBehavior.STATE_COLLAPSED
+            bottomSheetContainerMore.visibility = View.VISIBLE
 
             if(coverPlaylist.drawable != null) infoPlaylistMore.coverPlaylist.setImageDrawable(coverPlaylist.drawable)
             infoPlaylistMore.namePlaylist.text = namePlaylist.text
@@ -177,7 +188,6 @@ class PlaylistFragment : Fragment() {
         }
 
         buttonEditPlaylist.setOnClickListener(){
-            bottomSheetBehaviorMore.state = BottomSheetBehavior.STATE_HIDDEN
             sendToEditPlaylist(playlistId!!)
         }
 
@@ -232,10 +242,13 @@ class PlaylistFragment : Fragment() {
 
         bottomSheetBehaviorTracks = BottomSheetBehavior.from(bottomSheetContainerTracks).apply {
             state = BottomSheetBehavior.STATE_COLLAPSED
+            peekHeight = (resources.displayMetrics.heightPixels.toFloat() * 0.33f).toInt()
         }
 
         bottomSheetBehaviorMore = BottomSheetBehavior.from(bottomSheetContainerMore).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
+            peekHeight = (resources.displayMetrics.heightPixels.toFloat() * 0.45f).toInt()
+            bottomSheetContainerMore.visibility = View.GONE
         }
     }
 
@@ -260,6 +273,8 @@ class PlaylistFragment : Fragment() {
     }
 
     private fun sendToEditPlaylist(playlistId: Int) {
+        bottomSheetBehaviorMore.state = BottomSheetBehavior.STATE_HIDDEN
+        bottomSheetContainerMore.visibility = View.GONE
         findNavController().navigate(
             R.id.action_playlistFragment_to_editPlaylistFragment,
             EditPlaylistFragment.createArgs(playlistId)

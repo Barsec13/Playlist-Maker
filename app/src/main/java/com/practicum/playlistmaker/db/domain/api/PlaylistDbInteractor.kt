@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker.db.domain.api
 
-import com.practicum.playlistmaker.new_playlist.domain.model.Playlist
+import com.practicum.playlistmaker.newplaylist.domain.model.Playlist
 import com.practicum.playlistmaker.player.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 

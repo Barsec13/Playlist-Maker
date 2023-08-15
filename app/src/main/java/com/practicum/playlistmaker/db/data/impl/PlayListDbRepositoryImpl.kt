@@ -7,7 +7,7 @@ import com.practicum.playlistmaker.db.data.converter.PlaylistDbConverter
 import com.practicum.playlistmaker.db.data.entity.PlaylistEntity
 import com.practicum.playlistmaker.db.data.entity.TrackInPlaylistEntity
 import com.practicum.playlistmaker.db.domain.api.PlayListDbRepository
-import com.practicum.playlistmaker.new_playlist.domain.model.Playlist
+import com.practicum.playlistmaker.newplaylist.domain.model.Playlist
 import com.practicum.playlistmaker.player.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -78,9 +78,11 @@ class PlayListDbRepositoryImpl(
 
     override suspend fun getAllTrackInPlaylists(): Flow<List<Track>> = flow {
         val allTrackInPlaylist =
-            appDataBase.trackInPlaylistDao().getAllTrackInPlaylists().map { trackInPlaylistEntity ->
-                playlistDbConverter.map(trackInPlaylistEntity)
-            }
+            appDataBase.trackInPlaylistDao().getAllTrackInPlaylists()
+                .sortedWith(compareBy(TrackInPlaylistEntity::currentDate))
+                .map { trackInPlaylistEntity ->
+                    playlistDbConverter.map(trackInPlaylistEntity)
+                }
 
         emit(allTrackInPlaylist)
     }
