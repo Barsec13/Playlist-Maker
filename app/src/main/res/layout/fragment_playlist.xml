@@ -212,7 +212,7 @@
                 android:fontFamily="@font/ys_text_regular"
                 android:gravity="center_horizontal"
                 android:text="@string/empty_playlist"
-                android:textColor="?attr/snackbar_text"
+                android:textColor="?attr/snackbar"
                 android:textSize="@dimen/text_size_18"
                 android:visibility="visible" />
 

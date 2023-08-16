@@ -38,7 +38,8 @@ class PlaylistFragment : Fragment() {
     private lateinit var share: ImageView
     private lateinit var more: ImageView
     private lateinit var recyclerViewBottomSheet: RecyclerView
-    private lateinit var confirmDialog: MaterialAlertDialogBuilder
+    private lateinit var confirmDialogDeleteTrack: MaterialAlertDialogBuilder
+    private lateinit var confirmDialogDeletePlaylist: MaterialAlertDialogBuilder
     private lateinit var buttonArrowBack: androidx.appcompat.widget.Toolbar
     private lateinit var playlistIsEmpty: TextView
     private lateinit var bottomSheetBehaviorMore: BottomSheetBehavior<LinearLayout>
@@ -162,7 +163,7 @@ class PlaylistFragment : Fragment() {
         }
         tracksAdapterBottomSheet.itemLongClickListener = { position, tracks ->
             trackId = tracks.trackId
-            confirmDialog.show()
+            confirmDialogDeleteTrack.show()
         }
 
         share.setOnClickListener(){
@@ -183,8 +184,7 @@ class PlaylistFragment : Fragment() {
         }
 
         buttonDeletePlaylist.setOnClickListener(){
-            viewModel.deletePlaylist()
-            findNavController().navigateUp()
+            confirmDialogDeletePlaylist.show()
         }
 
         buttonEditPlaylist.setOnClickListener(){
@@ -228,12 +228,22 @@ class PlaylistFragment : Fragment() {
         buttonEditPlaylist = binding.buttonEditPlaylist
         buttonDeletePlaylist = binding.buttonDeletePlaylist
 
-        confirmDialog = MaterialAlertDialogBuilder(requireContext())
+        confirmDialogDeleteTrack = MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.delete_track)
             .setMessage("")
             .setPositiveButton(R.string.yes) { dialog, which ->
                 if (trackId == null) return@setPositiveButton
                 viewModel.deleteTrack(trackId!!)
+            }
+            .setNegativeButton(R.string.no) { dialog, which -> }
+
+        confirmDialogDeletePlaylist = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.delete_playlist_message)
+            .setMessage("")
+            .setPositiveButton(R.string.yes) { dialog, which ->
+                if (playlistId == null) return@setPositiveButton
+                viewModel.deletePlaylist()
+                findNavController().navigateUp()
             }
             .setNegativeButton(R.string.no) { dialog, which -> }
 

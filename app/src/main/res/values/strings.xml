@@ -64,6 +64,7 @@
     <string name="trackAddOnPlaylist">Добавлено в плейлист</string>
 
     <string name="delete_track">Хотите удалить трек?</string>
+    <string name="delete_playlist_message">Хотите удалить плейлист?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="empty_playlist">Плейлист пуст</string>
