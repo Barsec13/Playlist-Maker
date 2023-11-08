@@ -6,8 +6,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.new_playlist.domain.model.Playlist
-import com.practicum.playlistmaker.util.GetWordTrack
+import com.practicum.playlistmaker.newplaylist.domain.model.Playlist
+import com.practicum.playlistmaker.util.GetWord
 
 class PlaylistViewHolderBottomSheet(parentView: ViewGroup) : RecyclerView.ViewHolder(
     LayoutInflater.from(parentView.context)
@@ -21,6 +21,6 @@ class PlaylistViewHolderBottomSheet(parentView: ViewGroup) : RecyclerView.ViewHo
         if (!model.uriCover.toString().isNullOrEmpty()) coverPlaylist.setImageURI(model.uriCover)
         namePlaylist.text = model.playListName
         val quantityTracks = model.quantityTracks
-        countTracks.text = quantityTracks.toString() + " " + GetWordTrack.getWordTrack(quantityTracks, itemView)
+        countTracks.text = quantityTracks.toString() + " " + GetWord.getWordTrack(quantityTracks, itemView)
     }
 }

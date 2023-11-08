@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:orientation="vertical"
-    tools:context="com.practicum.playlistmaker.media_library.ui.fragment.MediaLibraryFragment">
+    tools:context="com.practicum.playlistmaker.medialibrary.ui.fragment.MediaLibraryFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarMediaLibrary"

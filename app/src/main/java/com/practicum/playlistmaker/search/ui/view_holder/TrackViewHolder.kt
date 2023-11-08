@@ -8,13 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.util.TimeUtils.formatTrackDuraction
 import com.practicum.playlistmaker.player.domain.model.Track
+import com.practicum.playlistmaker.util.TimeUtils.formatTrackDuraction
 
-class TrackViewHolder(parentView: ViewGroup) : RecyclerView.ViewHolder(
-    LayoutInflater.from(parentView.context)
-        .inflate(R.layout.track_view, parentView, false)
-) {
+class TrackViewHolder(parentView: ViewGroup, private val resolution: String) :
+    RecyclerView.ViewHolder(
+        LayoutInflater.from(parentView.context)
+            .inflate(R.layout.track_view, parentView, false)
+    ) {
 
     //Ссылки на View-элементы в track_view (View которыми наполнится RecyclerView)
     private val trackName: TextView = itemView.findViewById(R.id.trackName)
@@ -29,12 +30,23 @@ class TrackViewHolder(parentView: ViewGroup) : RecyclerView.ViewHolder(
         artistName.text = model.artistName
         trackTime.text = formatTrackDuraction(model.trackTimeMillis.toInt())
 
-        //Передача картинки из интернета с помощью библиотеки Glide
-        Glide.with(itemView)
-            .load(model.artworkUrl100)
-            .placeholder(R.drawable.ic_placeholder)
-            .centerCrop()
-            .transform(RoundedCorners(roundingRadius))
-            .into(artworkUrl100)
+        fun setImage(artworkUrl: String) {
+            Glide.with(itemView)
+                .load(artworkUrl)
+                .placeholder(R.drawable.ic_placeholder)
+                .centerCrop()
+                .transform(RoundedCorners(roundingRadius))
+                .into(artworkUrl100)
+        }
+
+        when (resolution) {
+            "high resolution" -> {
+                setImage(model.artworkUrl100)
+            }
+
+            "low resolution" -> {
+                setImage(model.artworkUrl60)
+            }
+        }
     }
 }
